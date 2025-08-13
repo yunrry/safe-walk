@@ -71,7 +71,7 @@
 
 ### Backend
 - **Framework**: Spring Boot 3.2.0
-- **Language**: Java 17
+- **Language**: Java 21
 - **Database**: MySQL 8.0
 - **Cache**: Redis 7.0
 - **Build Tool**: Gradle 8.0
@@ -115,7 +115,7 @@
 ## 🚀 설치 및 실행
 
 ### 사전 요구사항
-- Java 17+
+- Java 21+
 - Docker & Docker Compose
 - 도로교통공단 OpenAPI 인증키
 
