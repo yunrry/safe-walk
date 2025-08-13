@@ -1,0 +1,27 @@
+---
+description: code convention for sprinboot project
+globs:
+alwaysApply: true
+---
+
+## 글로벌
+
+1. Exception
+    1. 전역적인 Exception은 Common에서 관리
+        1. 각 domain별로 발생하는 Exception의 경우 Global Exception을 상속받아 각 도메인 별로 관리
+    2. restcontroller advice를 사용해 예외가 터지면 BaseResponse를 통해 응답 반환
+2. BaseEntity
+    1. BaseEntity
+        1. createAt → 생성된 시각
+        2. updateAt → 수정된 시각
+3. BaseResponse
+    1. 공통적인 응답 포멧을 지키기 위한 Response
+4. API 경로
+    1. prefix → api/v1
+    2. domain → api/v1/member
+    3. actions → api/v1/member/login
+
+
+## 객체
+
+1. 생성자는 @RequiredArgsConstructor 사용
