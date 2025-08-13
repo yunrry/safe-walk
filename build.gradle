@@ -17,6 +17,12 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	testImplementation {
+		exclude group: 'org.slf4j', module: 'slf4j-simple'
+	}
+	testRuntimeOnly {
+		exclude group: 'org.slf4j', module: 'slf4j-simple'
+	}
 }
 
 repositories {
@@ -32,6 +38,11 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// 테스트용 H2 데이터베이스
+	testImplementation 'com.h2database:h2'
+
+	// 테스트용 embedded Redis (선택사항)
+	testImplementation 'it.ozimov:embedded-redis:0.7.3'
 
 	// 개발 도구
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
