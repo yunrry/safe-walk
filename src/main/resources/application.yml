@@ -1,0 +1,68 @@
+# application.yml
+spring:
+  profiles:
+    active: local
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+---
+# 로컬 개발 환경
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/safe_walk?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: yoon
+    password: yoon123!
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+
+  data:
+    redis:
+      url: redis://localhost:6379/2
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
+
+---
+# 운영 환경 (Docker)
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/${DB_NAME:safe_walk}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME:yoon}
+    password: ${DB_PASSWORD:yoon123!}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+
+  data:
+    redis:
+      url: redis://${REDIS_HOST:redis}:${REDIS_PORT:6379}/${REDIS_DATABASE:2}
+      timeout: 2000ms
+
+  jpa:
+    show-sql: false  # 운영에서는 SQL 로그 비활성화
