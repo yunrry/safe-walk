@@ -33,6 +33,11 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+	// 개발 도구
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// 액추에이터 (모니터링)
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	// MySQL 드라이버 추가
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	// JPA 의존성 (없다면 추가)
