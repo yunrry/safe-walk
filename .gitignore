@@ -41,3 +41,5 @@ out/
 application-*.yml
 
 docker-compose-dev.yml
+
+.cursor/rules/** */
