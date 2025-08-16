@@ -1,0 +1,18 @@
+# 데이터 처리 및 분석
+pandas==2.1.4
+numpy==1.25.2
+
+# 데이터베이스 연결
+PyMySQL==1.1.0
+SQLAlchemy==2.0.23
+
+# 환경변수 관리
+python-dotenv==1.0.0
+
+# 로깅 및 유틸리티
+python-dateutil==2.8.2
+
+# 기존 프로젝트 패키지들
+requests==2.31.0
+beautifulsoup4==4.12.2
+lxml==4.9.3
