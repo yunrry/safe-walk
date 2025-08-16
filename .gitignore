@@ -42,4 +42,7 @@ application-*.yml
 
 docker-compose-dev.yml
 
-.cursor/rules/** */
+.cursor/rules/**
+
+csv/
+csv/**
