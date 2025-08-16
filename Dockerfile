@@ -1,4 +1,3 @@
-# Dockerfile (GitHub 프로젝트 루트)
 FROM openjdk:21-jdk-slim
 
 # 작업 디렉토리 설정
