@@ -5,88 +5,31 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update  # 운영에서는 validate 고려
+      ddl-auto: validate  # 운영에서는 validate 고려
     show-sql: false
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: false  # 운영에서는 false 권장
         use_sql_comments: false  # 운영에서는 false 권장
-        jdbc:
-          batch_size: 20
-          batch_versioned_data: true
-        order_inserts: true
-        order_updates: true
-    open-in-view: false
+
 
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&rewriteBatchedStatements=true
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    hikari:
-      maximum-pool-size: 20
-      minimum-idle: 10
-      idle-timeout: 300000
-      max-lifetime: 1200000
-      connection-timeout: 30000
-      validation-timeout: 5000
-      leak-detection-threshold: 60000
 
-  data:
-    redis:
-      host: redis
-      port: 6379
-      database: 2
-      timeout: 2000ms
-      connect-timeout: 2000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 2
-          max-wait: -1ms
-        shutdown-timeout: 100ms
+
 
 server:
   port: ${SERVER_PORT:8080}
   servlet:
     context-path: /api
-  compression:
-    enabled: true
-    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
-    min-response-size: 1024
-  http2:
-    enabled: true
+
 
 # 로깅 설정
 logging:
   level:
     root: INFO
     yys.safewalk: INFO
-    org.springframework.web: WARN
-    org.hibernate: WARN
-    com.zaxxer.hikari: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
-  file:
-    name: /app/logs/safe-walk.log
-  logback:
-    rollingpolicy:
-      max-file-size: 100MB
-      max-history: 30
-
-# 액추에이터 설정 (모니터링용)
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics,prometheus
-      base-path: /actuator
-  endpoint:
-    health:
-      show-details: when-authorized
-  metrics:
-    export:
-      prometheus:
-        enabled: true
