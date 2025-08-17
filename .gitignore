@@ -47,3 +47,8 @@ docker-compose-dev.yml
 python/csv/**
 
 csv/**
+/python/emd.dbf
+/python/emd.json
+/python/emd.shp
+/python/emd.shx
+/emd_dong_names.txt
