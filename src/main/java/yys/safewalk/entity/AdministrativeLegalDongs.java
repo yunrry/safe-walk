@@ -34,7 +34,7 @@ public class AdministrativeLegalDongs {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "code", length = 50)
+    @Column(name = "code", length = 50) // = EMD_CD + "00"
     private String code;
 
     @Column(name = "sido", length = 50)
