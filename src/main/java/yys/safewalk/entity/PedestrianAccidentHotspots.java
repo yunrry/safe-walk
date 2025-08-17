@@ -40,7 +40,7 @@ public class PedestrianAccidentHotspots {
     @Column(name = "accident_hotspot_id", nullable = false)
     private Long accidentHotspotId;
 
-    @Column(name = "sido_code", nullable = false, length = 10)
+    @Column(name = "sido_code", nullable = false, length = 10)// EMD_CD+00
     private String sidoCode;
 
     @Column(name = "point_code", nullable = false, length = 20)

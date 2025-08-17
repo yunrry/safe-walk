@@ -52,3 +52,4 @@ csv/**
 /python/emd.shp
 /python/emd.shx
 /emd_dong_names.txt
+/logs/safewalk.log
