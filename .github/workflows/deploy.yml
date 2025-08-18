@@ -77,4 +77,27 @@ jobs:
             docker-compose down || true
             docker-compose pull
             docker-compose up -d
+            
+            # 헬스체크
+            echo "애플리케이션 시작 대기 중..."
+            sleep 30
+      
+            for i in {1..12}; do
+              if curl -f -s https://3.37.162.146/api/swagger-ui/index.html > /dev/null; then
+               echo "✅ 애플리케이션 정상 시작됨 (${i}0초 후)"
+                break
+              else
+                echo "⏳ 대기 중... (${i}0초)"
+                if [ $i -eq 12 ]; then
+                  echo "❌ 헬스체크 실패"
+                  docker logs safe_walk_app --tail 50
+                  exit 1
+                fi
+                sleep 10
+              fi
+            done
+      
+            # 사용하지 않는 이미지 정리
             docker image prune -f
+      
+            echo "🚀 배포 완료!"
