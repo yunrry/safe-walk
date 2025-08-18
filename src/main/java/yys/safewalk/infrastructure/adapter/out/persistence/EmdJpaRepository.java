@@ -8,6 +8,7 @@ import yys.safewalk.entity.EmdData;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 public interface EmdJpaRepository extends JpaRepository<EmdData, Long> {
 
@@ -39,5 +40,8 @@ public interface EmdJpaRepository extends JpaRepository<EmdData, Long> {
     """)
     List<Object[]> findEmdDataInBounds(@Param("swLat") BigDecimal swLat, @Param("swLng") BigDecimal swLng,
                                        @Param("neLat") BigDecimal neLat, @Param("neLng") BigDecimal neLng);
+
+
+    Optional<EmdData> findByEmdCd(String emdCd);
 
     }

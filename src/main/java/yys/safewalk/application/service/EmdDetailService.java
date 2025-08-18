@@ -27,21 +27,32 @@ public class EmdDetailService implements GetEmdDetailUseCase {
 
     private EmdDetailResponse mapToResponse(EmdDetail emdDetail) {
         List<AccidentDetailResponse> accidents = emdDetail.getAccidents().stream()
-                .map(accident -> new AccidentDetailResponse(
-                        accident.getId(),
-                        accident.getLocation(),
-                        accident.getAccidentCount(),
-                        new CasualtiesResponse(
-                                accident.getCasualties().getTotal(),
-                                accident.getCasualties().getDead(),
-                                accident.getCasualties().getSevere(),
-                                accident.getCasualties().getMinor()
-                        ),
-                        new PointResponse(
-                                accident.getPoint().getLatitude(),
-                                accident.getPoint().getLongitude()
-                        )
-                ))
+                .map(accident -> {
+                    Integer dead = accident.getCasualties().getDead();
+                    Integer severe = accident.getCasualties().getSevere();
+                    Integer minor = accident.getCasualties().getMinor();
+
+                    // total = dead + severe + minor
+                    Integer total = (dead != null ? dead : 0) +
+                            (severe != null ? severe : 0) +
+                            (minor != null ? minor : 0);
+
+                    return new AccidentDetailResponse(
+                            accident.getId(),
+                            accident.getLocation(),
+                            accident.getAccidentCount(),
+                            new CasualtiesResponse(
+                                    total,  // 계산된 값
+                                    dead,
+                                    severe,
+                                    minor
+                            ),
+                            new PointResponse(
+                                    accident.getPoint().latitude(),
+                                    accident.getPoint().longitude()
+                            )
+                    );
+                })
                 .collect(Collectors.toList());
 
         return new EmdDetailResponse(
