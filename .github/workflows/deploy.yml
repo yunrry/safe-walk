@@ -56,28 +56,25 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            # .env 파일 생성
+            cat > .env << EOF
+            ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY=safe-walk
+            IMAGE_TAG=latest
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=3306
+            DB_USERNAME=${{ secrets.DB_USERNAME }}
+            DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
+            DB_NAME=${{ secrets.DB_NAME }}
+            SERVER_PORT=8080
+            SPRING_PROFILES_ACTIVE=prod
+            EOF
+            
             # AWS CLI 및 Docker 로그인
             aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
             
-            # 기존 컨테이너 중지 및 제거
+            # 배포
             docker-compose down || true
-            
-            # 환경 변수 설정
-            export ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-            export ECR_REPOSITORY=safe-walk
-            export IMAGE_TAG=latest
-            export DB_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }}
-            export DB_NAME=${{ secrets.DB_NAME }}
-            export DB_USERNAME=${{ secrets.DB_USERNAME }}
-            export DB_PASSWORD=${{ secrets.DB_PASSWORD }}
-            export DB_HOST=${{ secrets.DB_HOST }}
-            export SERVER_PORT=8080
-            export DB_PORT=3306
-            export SPRING_PROFILES_ACTIVE=prod
-            
-            # 새 컨테이너 실행
             docker-compose pull
             docker-compose up -d
-            
-            # 사용하지 않는 이미지 정리
             docker image prune -f
