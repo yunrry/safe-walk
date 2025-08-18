@@ -77,7 +77,7 @@ jobs:
             docker-compose down || true
             docker-compose pull
             docker-compose up -d
-            
+            docker image prune -f
             # 헬스체크
 #            echo "애플리케이션 시작 대기 중..."
 #            sleep 30
@@ -98,6 +98,6 @@ jobs:
 #            done
 #
             # 사용하지 않는 이미지 정리
-            docker image prune -f
+#            docker image prune -f
       
 #            echo "🚀 배포 완료!"
