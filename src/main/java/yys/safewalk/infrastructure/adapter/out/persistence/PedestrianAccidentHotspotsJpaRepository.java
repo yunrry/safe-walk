@@ -20,4 +20,6 @@ public interface PedestrianAccidentHotspotsJpaRepository extends JpaRepository<P
             @Param("neLat") BigDecimal neLat,
             @Param("neLng") BigDecimal neLng
     );
+
+    List<PedestrianAccidentHotspots> findBySidoCodeStartingWith(String emdPrefix);
 }
