@@ -33,3 +33,52 @@ logging:
   level:
     root: INFO
     yys.safewalk: INFO
+
+
+kakao:
+  api:
+    key: ${KAKAO_API_KEY:your-kakao-api-key}
+
+
+
+
+---
+# 테스트 환경 설정
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+
+server:
+  port: 0  # 랜덤 포트 사용
+
+# 테스트용 더미 값
+kakao:
+  api:
+    key: test-kakao-api-key
+
+# 테스트 로깅 설정
+logging:
+  level:
+    root: WARN
+    yys.safewalk: DEBUG
+    org.springframework.web: DEBUG
