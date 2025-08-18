@@ -49,4 +49,30 @@ public class EmdController {
         List<EmdInBoundsResponse> response = getEmdInBoundsUseCase.getEmdInBounds(query);
         return ResponseEntity.ok(response);
     }
+
+
+//    @GetMapping("/emd")
+//    @Operation(
+//            summary = "지도 영역 법정동 조회",
+//            parameters = {
+//                    @Parameter(name = "swLat", description = "남서쪽 위도", example = "35.820"),
+//                    @Parameter(name = "swLng", description = "남서쪽 경도", example = "129.200"),
+//                    @Parameter(name = "neLat", description = "북동쪽 위도", example = "35.850"),
+//                    @Parameter(name = "neLng", description = "북동쪽 경도", example = "129.230")
+//            }
+//    )
+//    public ResponseEntity<List<EmdInBoundsResponse>> getEmdInBounds(
+//            @RequestParam BigDecimal swLat,
+//            @RequestParam BigDecimal swLng,
+//            @RequestParam BigDecimal neLat,
+//            @RequestParam BigDecimal neLng
+//    ) {
+//        GetEmdInBoundsQuery query = new GetEmdInBoundsQuery(
+//                new Coordinate(swLat, swLng),
+//                new Coordinate(neLat, neLng)
+//        );
+//
+//        List<EmdInBoundsResponse> response = getEmdInBoundsUseCase.getEmdInBounds(query);
+//        return ResponseEntity.ok(response);
+//    }
 }

@@ -4,10 +4,11 @@ public class Emd {
     private final String emdCd;
     private final String name;
     private final Coordinate centerPoint;
-    private final Polygon polygon;
+//    private final Polygon polygon;
+    private final String polygon;
     private final Integer totalAccident;
 
-    public Emd(String emdCd, String name, Coordinate centerPoint, Polygon polygon, Integer totalAccident) {
+    public Emd(String emdCd, String name, Coordinate centerPoint, String polygon, Integer totalAccident) {
         this.emdCd = emdCd;
         this.name = name;
         this.centerPoint = centerPoint;
@@ -19,6 +20,6 @@ public class Emd {
     public String getEmdCd() { return emdCd; }
     public String getName() { return name; }
     public Coordinate getCenterPoint() { return centerPoint; }
-    public Polygon getPolygon() { return polygon; }
+    public String getPolygon() { return polygon; }
     public Integer getTotalAccident() { return totalAccident; }
 }
