@@ -59,7 +59,7 @@ public class EmdController {
             summary = "법정동 상세 조회",
             description = "법정동 코드를 기반으로 해당 법정동의 상세 사고이력 및 지리정보를 조회합니다",
             parameters = {
-                    @Parameter(name = "emdCode", description = "법정동 코드", example = "11110103")
+                    @Parameter(name = "emdCode", description = "법정동 코드", example = "11140118")
             }
     )
     public ResponseEntity<EmdDetailResponse> getEmdDetail(
