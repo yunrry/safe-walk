@@ -100,4 +100,4 @@ jobs:
             # 사용하지 않는 이미지 정리
             docker image prune -f
       
-            echo "🚀 배포 완료!"
+#            echo "🚀 배포 완료!"
