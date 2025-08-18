@@ -37,7 +37,8 @@ class EmdServiceTest {
                 "11110103",
                 "황남동",
                 new Coordinate(BigDecimal.valueOf(35.8339), BigDecimal.valueOf(129.2141)),
-                new Polygon("{}"),
+//                new Polygon("{}"),
+                "",
                 3
         );
 

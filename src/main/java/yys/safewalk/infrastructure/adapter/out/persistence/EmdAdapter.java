@@ -33,10 +33,10 @@ public class EmdAdapter implements EmdRepository {
     private Emd mapToEmd(Object[] row) {
         String emdCd = (String) row[0];
         String emdKorNm = (String) row[1];
-        String polygonJson = (String) row[2];
-        BigDecimal latitude = (BigDecimal) row[3];
-        BigDecimal longitude = (BigDecimal) row[4];
-        Integer totalAccident = ((Number) row[5]).intValue();
+//        String polygonJson = (String) row[2];
+        BigDecimal latitude = (BigDecimal) row[2];
+        BigDecimal longitude = (BigDecimal) row[3];
+        Integer totalAccident = ((Number) row[4]).intValue();
 
         Coordinate centerPoint = new Coordinate(latitude, longitude);
 
@@ -44,7 +44,8 @@ public class EmdAdapter implements EmdRepository {
                 emdCd,
                 emdKorNm,
                 centerPoint,
-                new Polygon(polygonJson),
+//                new Polygon(polygonJson),
+                "",
                 totalAccident
         );
     }
