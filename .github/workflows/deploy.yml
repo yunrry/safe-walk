@@ -78,7 +78,8 @@ jobs:
             docker-compose pull
             docker-compose up -d
             docker image prune -f
-            # 헬스체크
+
+# 헬스체크
 #            echo "애플리케이션 시작 대기 중..."
 #            sleep 30
 #
