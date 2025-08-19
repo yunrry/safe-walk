@@ -10,6 +10,8 @@ import yys.safewalk.application.usecase.GetEmdInBoundsUseCase;
 import yys.safewalk.domain.model.Emd;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,13 @@ public class EmdService implements GetEmdInBoundsUseCase {
         List<Emd> emds = emdRepository.findEmdInBounds(query.swLatLng(), query.neLatLng());
 
         return emds.stream()
+                .collect(Collectors.toMap(
+                        emd -> emd.getName() + "-" + emd.getEmdCd(), // key: name-emdCd 조합
+                        Function.identity(), // value: emd 객체 자체
+                        (existing, replacement) -> existing // 중복 시 기존 객체 유지
+                ))
+                .values()
+                .stream()
                 .map(emd -> new EmdInBoundsResponse(
                         emd.getName(),
                         emd.getTotalAccident(),
