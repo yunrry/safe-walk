@@ -43,6 +43,7 @@ class AdministrativeLegalDongServiceTest {
                 .sido("서울특별시")
                 .sigungu("종로구")
                 .eupMyeonDong("청운효자동")
+                .codeType("B") // H가 아닌 타입
                 .build();
 
         when(repository.findByCode("1111000")).thenReturn(Optional.of(dong));
@@ -56,7 +57,7 @@ class AdministrativeLegalDongServiceTest {
     }
 
     @Test
-    @DisplayName("실시간 검색 성공 - 응답 코드는 8자리")
+    @DisplayName("실시간 검색 성공 - 응답 코드는 8자리, codeType H 제외")
     void searchRealtime_Success() {
         // Given
         String query = "청운";
@@ -70,6 +71,7 @@ class AdministrativeLegalDongServiceTest {
                 .eupMyeonDong("청운효자동")
                 .latitude(BigDecimal.valueOf(37.586))
                 .longitude(BigDecimal.valueOf(126.973))
+                .codeType("B") // H가 아닌 타입
                 .build();
 
         when(repository.findByEupMyeonDongStartingWith(query, PageRequest.of(0, limit)))
@@ -85,7 +87,7 @@ class AdministrativeLegalDongServiceTest {
     }
 
     @Test
-    @DisplayName("상세 검색 성공 - 응답 코드는 8자리")
+    @DisplayName("상세 검색 성공 - 응답 코드는 8자리, codeType H 제외")
     void search_Success() {
         // Given
         EmdSearchRequest request = new EmdSearchRequest("청운효자동", "서울특별시", "종로구");
@@ -96,10 +98,11 @@ class AdministrativeLegalDongServiceTest {
                 .eupMyeonDong("청운효자동")
                 .sido("서울특별시")
                 .sigungu("종로구")
+                .codeType("B") // H가 아닌 타입
                 .build();
 
-        when(repository.findByEupMyeonDongAndSidoAndSigungu(
-                request.eupMyeonDong(), request.sido(), request.sigungu()))
+        when(repository.findByEupMyeonDongAndSidoAndSigunguAndCodeTypeNot(
+                request.eupMyeonDong(), request.sido(), request.sigungu(), "H"))
                 .thenReturn(List.of(dong));
 
         // When
@@ -112,7 +115,7 @@ class AdministrativeLegalDongServiceTest {
     }
 
     @Test
-    @DisplayName("읍면동명만으로 검색 성공")
+    @DisplayName("읍면동명만으로 검색 성공 - codeType H 제외")
     void searchByEupMyeonDongOnly_Success() {
         // Given
         String eupMyeonDong = "청운효자동";
@@ -123,6 +126,7 @@ class AdministrativeLegalDongServiceTest {
                 .sido("서울특별시")
                 .sigungu("종로구")
                 .eupMyeonDong("청운효자동")
+                .codeType("B") // H가 아닌 타입
                 .build();
 
         AdministrativeLegalDongs dong2 = AdministrativeLegalDongs.builder()
@@ -131,6 +135,7 @@ class AdministrativeLegalDongServiceTest {
                 .sido("부산광역시")
                 .sigungu("해운대구")
                 .eupMyeonDong("청운효자동")
+                .codeType("B") // H가 아닌 타입
                 .build();
 
         when(repository.findByEupMyeonDongOrderBySidoAndSigungu(eupMyeonDong))
@@ -145,5 +150,33 @@ class AdministrativeLegalDongServiceTest {
         assertThat(result.get(0).sido()).isEqualTo("서울특별시");
         assertThat(result.get(1).code()).isEqualTo("22220000"); // 8자리 응답
         assertThat(result.get(1).sido()).isEqualTo("부산광역시");
+    }
+
+    @Test
+    @DisplayName("codeType이 H인 데이터는 검색에서 제외")
+    void search_ExcludeCodeTypeH() {
+        // Given
+        EmdSearchRequest request = new EmdSearchRequest("판교동", "경기도", "성남시 분당구");
+
+        AdministrativeLegalDongs dongB = AdministrativeLegalDongs.builder()
+                .id(1L)
+                .code("4113510800")
+                .sido("경기도")
+                .sigungu("성남시 분당구")
+                .eupMyeonDong("판교동")
+                .codeType("B")
+                .build();
+
+        // codeType이 H인 데이터는 repository에서 반환되지 않음
+        when(repository.findByEupMyeonDongAndSidoAndSigunguAndCodeTypeNot(
+                request.eupMyeonDong(), request.sido(), request.sigungu(), "H"))
+                .thenReturn(List.of(dongB)); // B 타입만 반환
+
+        // When
+        List<EmdResponse> result = service.search(request);
+
+        // Then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).codeType()).isEqualTo("B");
     }
 }
