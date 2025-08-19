@@ -26,40 +26,33 @@ public class EmdDetailService implements GetEmdDetailUseCase {
     }
 
     private EmdDetailResponse mapToResponse(EmdDetail emdDetail) {
-        List<AccidentDetailResponse> accidents = emdDetail.getAccidents().stream()
-                .map(accident -> {
-                    Integer dead = accident.getCasualties().getDead();
-                    Integer severe = accident.getCasualties().getSevere();
-                    Integer minor = accident.getCasualties().getMinor();
+        List<AccidentDetailResponse> accidentResponses = null;
 
-                    // total = dead + severe + minor
-                    Integer total = (dead != null ? dead : 0) +
-                            (severe != null ? severe : 0) +
-                            (minor != null ? minor : 0);
-
-                    return new AccidentDetailResponse(
+        if (emdDetail.getAccidents() != null) {
+            accidentResponses = emdDetail.getAccidents().stream()
+                    .map(accident -> new AccidentDetailResponse(
                             accident.getId(),
                             accident.getLocation(),
                             accident.getAccidentCount(),
                             new CasualtiesResponse(
-                                    total,  // 계산된 값
-                                    dead,
-                                    severe,
-                                    minor
+                                    accident.getCasualties().getTotal(),
+                                    accident.getCasualties().getDead(),
+                                    accident.getCasualties().getSevere(),
+                                    accident.getCasualties().getMinor()
                             ),
                             new PointResponse(
                                     accident.getPoint().latitude(),
                                     accident.getPoint().longitude()
                             )
-                    );
-                })
-                .collect(Collectors.toList());
+                    ))
+                    .collect(Collectors.toList());
+        }
 
         return new EmdDetailResponse(
                 emdDetail.getName(),
                 emdDetail.getTotalAccident(),
                 emdDetail.getEmdCode(),
-                accidents
+                accidentResponses
         );
     }
 }

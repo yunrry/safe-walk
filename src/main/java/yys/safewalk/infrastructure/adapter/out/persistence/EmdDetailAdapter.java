@@ -35,7 +35,18 @@ public class EmdDetailAdapter implements EmdDetailPort {
         List<PedestrianAccidentHotspots> accidents = accidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
         List<ElderlyPedestrianAccidentHotspots> elderlyAccidents = elderlyAccidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
 
-        // 3. 총 사고 수 계산 (일반 + 고령자)
+        // 3. 사고 데이터가 없는 경우 기본값으로 반환
+        if (accidents.isEmpty() && elderlyAccidents.isEmpty()) {
+            return Optional.of(new EmdDetail(
+                    emdData.getEmdKorNm(),
+                    0,  // totalAccident = 0
+                    emdCode,
+                    null  // accidentDetails = null
+            ));
+        }
+
+        // 4. 사고 데이터가 있는 경우 기존 로직 수행
+        // 총 사고 수 계산 (일반 + 고령자)
         Integer generalTotalAccident = accidents.stream()
                 .mapToInt(accident -> accident.getAccidentCount() != null ? accident.getAccidentCount() : 0)
                 .sum();
@@ -46,7 +57,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
 
         Integer totalAccident = generalTotalAccident + elderlyTotalAccident;
 
-        // 4. 사고 상세 정보 매핑 (일반 사고 데이터)
+        // 사고 상세 정보 매핑
         List<AccidentDetail> accidentDetails = new ArrayList<>();
 
         // 일반 사고 데이터 추가
