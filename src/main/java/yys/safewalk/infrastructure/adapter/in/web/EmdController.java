@@ -25,6 +25,7 @@ import yys.safewalk.domain.model.Coordinate;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/v1")
@@ -81,6 +82,62 @@ public class EmdController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/emd/details")
+    @Operation(
+            summary = "지도 영역 내 법정동 상세 조회",
+            description = "지도 영역(바운딩 박스) 내의 법정동들을 조회하고 각 법정동의 상세 사고이력 및 지리정보를 함께 반환합니다",
+            parameters = {
+                    @Parameter(name = "swLat", description = "남서쪽 위도", example = "35.820"),
+                    @Parameter(name = "swLng", description = "남서쪽 경도", example = "129.200"),
+                    @Parameter(name = "neLat", description = "북동쪽 위도", example = "35.850"),
+                    @Parameter(name = "neLng", description = "북동쪽 경도", example = "129.230")
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "지도 영역 내 법정동 상세 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EmdDetailResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (좌표 값 오류)",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public ResponseEntity<List<EmdDetailResponse>> getEmdDetailsInBounds(
+            @RequestParam BigDecimal swLat,
+            @RequestParam BigDecimal swLng,
+            @RequestParam BigDecimal neLat,
+            @RequestParam BigDecimal neLng
+    ) {
+        // 1. 지도 영역 내 법정동 목록 조회
+        GetEmdInBoundsQuery boundsQuery = new GetEmdInBoundsQuery(
+                new Coordinate(swLat, swLng),
+                new Coordinate(neLat, neLng)
+        );
+
+        List<EmdInBoundsResponse> emdsInBounds = getEmdUseCase.getEmdInBounds(boundsQuery);
+
+        // 2. 각 법정동 코드로 상세 정보 조회
+        List<EmdDetailResponse> detailResponses = emdsInBounds.stream()
+                .map(emd -> {
+                    GetEmdDetailQuery detailQuery = new GetEmdDetailQuery(emd.EMD_CD());
+                    return getEmdDetailUseCase.getEmdDetail(detailQuery);
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(detailResponses);
+    }
 
 
 
