@@ -237,9 +237,9 @@ public class EmdDetailAdapter implements EmdDetailPort {
             return "위치 정보 없음";
         }
 
-        // "서울특별시 종로구 낙원동(낙원상가 부근)" -> "낙원상가 부근"
-        int startIndex = pointName.indexOf('(');
-        int endIndex = pointName.indexOf(')', startIndex);
+        // 마지막 여는 괄호와 마지막 닫는 괄호를 찾아서 추출
+        int startIndex = pointName.lastIndexOf('(');
+        int endIndex = pointName.lastIndexOf(')');
 
         if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
             return pointName.substring(startIndex + 1, endIndex);
