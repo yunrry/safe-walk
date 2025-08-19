@@ -157,8 +157,8 @@ class PopularTouristSpotsImporter:
             
             # 첫 번째 CSV (세대별 인기관광지)에 시도/시군구 정보 추가
             # 경상북도 경주시로 설정
-            df1['sido_name'] = '경상북도'
-            df1['sigungu_name'] = '경주시'
+            df1['sido_name'] = '제주특별자치도'
+            df1['sigungu_name'] = '제주시'
             df1['base_year_month'] = None
             df1['growth_rate'] = None
             
@@ -194,17 +194,34 @@ class PopularTouristSpotsImporter:
             print(f"❌ 데이터 병합 실패: {e}")
             raise
 
-    def save_to_database(self, df):
+    def save_to_database(self, df, replace_all=False):
         """데이터를 데이터베이스에 저장"""
         try:
             print("💾 데이터베이스에 저장 중...")
             
-            # 기존 데이터 삭제 (테이블 초기화)
-            print("🗑️ 기존 데이터 삭제 중...")
-            with self.engine.connect() as connection:
-                connection.execute(text("DELETE FROM popular_tourist_spots"))
-                connection.commit()
-            print("✅ 기존 데이터 삭제 완료")
+            if replace_all:
+                # 기존 데이터 삭제 (전체 교체 모드)
+                print("🗑️ 기존 데이터 삭제 중...")
+                with self.engine.connect() as connection:
+                    connection.execute(text("DELETE FROM popular_tourist_spots"))
+                    connection.commit()
+                print("✅ 기존 데이터 삭제 완료")
+            else:
+                # 중복 데이터 확인 및 제거
+                print("🔍 중복 데이터 확인 중...")
+                with self.engine.connect() as connection:
+                    for _, row in df.iterrows():
+                        delete_sql = """
+                        DELETE FROM popular_tourist_spots 
+                        WHERE spot_name = :spot_name AND source_file = :source_file
+                        """
+                        connection.execute(text(delete_sql), 
+                                         {
+                                             'spot_name': row['spot_name'], 
+                                             'source_file': row['source_file']
+                                         })
+                    connection.commit()
+                print("✅ 중복 데이터 정리 완료")
             
             # 테이블에 데이터 삽입
             df.to_sql('popular_tourist_spots', 
@@ -256,6 +273,34 @@ class PopularTouristSpotsImporter:
             print("🚀 인기관광지 데이터 임포트 시작")
             print("=" * 50)
             
+            # # 1. 테이블 생성
+            # self.create_table()
+            
+            # 2. 첫 번째 CSV 데이터 로드 (세대별 인기관광지)
+            df1 = self.load_csv_data(csv_path1, "세대별 인기관광지(전체)")
+            
+            # 3. 두 번째 CSV 데이터 로드 (세대별 핫플레이스)
+            df2 = self.load_csv_data(csv_path2, "세대별 핫플레이스(전체)")
+            
+            # 4. 데이터 병합 및 처리
+            merged_df = self.merge_and_process_data(df1, df2)
+            
+            # 5. 데이터베이스에 저장 (추가 모드)
+            self.save_to_database(merged_df, replace_all=False)
+            
+            print("=" * 50)
+            print("🎉 모든 데이터 임포트가 완료되었습니다!")
+            
+        except Exception as e:
+            print(f"❌ 임포트 실패: {e}")
+            raise
+
+    def run_import_replace_all(self, csv_path1, csv_path2):
+        """전체 임포트 프로세스 실행 (전체 교체 모드)"""
+        try:
+            print("🚀 인기관광지 데이터 임포트 시작 (전체 교체 모드)")
+            print("=" * 50)
+            
             # 1. 테이블 생성
             self.create_table()
             
@@ -268,11 +313,11 @@ class PopularTouristSpotsImporter:
             # 4. 데이터 병합 및 처리
             merged_df = self.merge_and_process_data(df1, df2)
             
-            # 5. 데이터베이스에 저장
-            self.save_to_database(merged_df)
+            # 5. 데이터베이스에 저장 (전체 교체 모드)
+            self.save_to_database(merged_df, replace_all=True)
             
             print("=" * 50)
-            print("🎉 모든 데이터 임포트가 완료되었습니다!")
+            print("🎉 모든 데이터 임포트가 완료되었습니다! (전체 교체)")
             
         except Exception as e:
             print(f"❌ 임포트 실패: {e}")
@@ -282,12 +327,28 @@ def main():
     """메인 실행 함수"""
     try:
         # CSV 파일 경로
-        csv_path1 = "csv/20250817000707_세대별 인기관광지(전체).csv"
-        csv_path2 = "csv/20250817000712_세대별 핫플레이스(전체).csv"
+        csv_path1 = "csv/20250817000730_세대별 인기관광지(전체).csv"
+        csv_path2 = "csv/20250817000736_세대별 핫플레이스(전체).csv"
         
-        # 임포터 인스턴스 생성 및 실행
+        # 사용자 모드 선택
+        print("📝 실행 모드를 선택하세요:")
+        print("1. 추가 모드 (기존 데이터 유지하고 새 데이터 추가)")
+        print("2. 전체 교체 모드 (기존 데이터 삭제 후 새 데이터로 교체)")
+        
+        choice = input("선택 (1 또는 2): ").strip()
+        
+        # 임포터 인스턴스 생성
         importer = PopularTouristSpotsImporter()
-        importer.run_import(csv_path1, csv_path2)
+        
+        if choice == "1":
+            print("✅ 추가 모드로 실행합니다.")
+            importer.run_import(csv_path1, csv_path2)
+        elif choice == "2":
+            print("✅ 전체 교체 모드로 실행합니다.")
+            importer.run_import_replace_all(csv_path1, csv_path2)
+        else:
+            print("⚠️ 잘못된 선택입니다. 기본값(추가 모드)로 실행합니다.")
+            importer.run_import(csv_path1, csv_path2)
         
     except Exception as e:
         print(f"❌ 프로그램 실행 실패: {e}")
