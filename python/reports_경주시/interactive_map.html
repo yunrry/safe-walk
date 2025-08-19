@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6a4d9c59b4c50276b8d376ac22468441 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; left: 50px; width: 150px; height: 90px; 
+                    background-color: white; border:2px solid grey; z-index:9999; 
+                    font-size:14px; padding: 10px">
+        <p><b>위험도 범례</b></p>
+        <p><i class="fa fa-circle" style="color:green"></i> 저위험</p>
+        <p><i class="fa fa-circle" style="color:orange"></i> 중위험</p>
+        <p><i class="fa fa-circle" style="color:red"></i> 고위험</p>
+        </div>
+        
+    
+            <div class="folium-map" id="map_6a4d9c59b4c50276b8d376ac22468441" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_6a4d9c59b4c50276b8d376ac22468441 = L.map(
+                "map_6a4d9c59b4c50276b8d376ac22468441",
+                {
+                    center: [35.83748607692307, 129.24771976923077],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_698117b645596c694d85ed7689a79982 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_698117b645596c694d85ed7689a79982.addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+            var circle_marker_159d94e05ef5190d862bb3170bb19e52 = L.circleMarker(
+                [35.845893, 129.212176],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_d8a3f5d91188676ac74be93a8e8d0d50 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5e874c3e645f24342d38167f5327e600 = $(`<div id="html_5e874c3e645f24342d38167f5327e600" style="width: 100.0%; height: 100.0%;"><b>동부동</b><br>사고 건수: 4건<br>위험도: 저위험</div>`)[0];
+                popup_d8a3f5d91188676ac74be93a8e8d0d50.setContent(html_5e874c3e645f24342d38167f5327e600);
+            
+        
+
+        circle_marker_159d94e05ef5190d862bb3170bb19e52.bindPopup(popup_d8a3f5d91188676ac74be93a8e8d0d50)
+        ;
+
+        
+    
+    
+            var circle_marker_494ca8b17776bdbd92d794146dd7d1f5 = L.circleMarker(
+                [35.738707, 129.284858],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_343330cb87d88035ed585debcbece491 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_877400d0510293a013c1584e3b2f331f = $(`<div id="html_877400d0510293a013c1584e3b2f331f" style="width: 100.0%; height: 100.0%;"><b>외동읍</b><br>사고 건수: 2건<br>위험도: 저위험</div>`)[0];
+                popup_343330cb87d88035ed585debcbece491.setContent(html_877400d0510293a013c1584e3b2f331f);
+            
+        
+
+        circle_marker_494ca8b17776bdbd92d794146dd7d1f5.bindPopup(popup_343330cb87d88035ed585debcbece491)
+        ;
+
+        
+    
+    
+            var circle_marker_3024ddd1b222d2ed4f2ad946cfd7ba4e = L.circleMarker(
+                [35.77228, 129.303108],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_042d91aff962f965717ce1aec97af721 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5178e4772dc638db91091250890dee15 = $(`<div id="html_5178e4772dc638db91091250890dee15" style="width: 100.0%; height: 100.0%;"><b>시래동</b><br>사고 건수: 5건<br>위험도: 저위험</div>`)[0];
+                popup_042d91aff962f965717ce1aec97af721.setContent(html_5178e4772dc638db91091250890dee15);
+            
+        
+
+        circle_marker_3024ddd1b222d2ed4f2ad946cfd7ba4e.bindPopup(popup_042d91aff962f965717ce1aec97af721)
+        ;
+
+        
+    
+    
+            var circle_marker_c39c4f6bbe1a7bd93f80cdba1cdf0758 = L.circleMarker(
+                [35.80601, 129.501105],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_5df580c1957506cc9dc9bdf8e113b33c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0788f1445b8202d396dfcd198e0fadb9 = $(`<div id="html_0788f1445b8202d396dfcd198e0fadb9" style="width: 100.0%; height: 100.0%;"><b>감포읍</b><br>사고 건수: 3건<br>위험도: 저위험</div>`)[0];
+                popup_5df580c1957506cc9dc9bdf8e113b33c.setContent(html_0788f1445b8202d396dfcd198e0fadb9);
+            
+        
+
+        circle_marker_c39c4f6bbe1a7bd93f80cdba1cdf0758.bindPopup(popup_5df580c1957506cc9dc9bdf8e113b33c)
+        ;
+
+        
+    
+    
+            var circle_marker_2fa473795bc7be2cc66bf77a07f9e91e = L.circleMarker(
+                [35.880682, 129.202557],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_86f7ffce5bb50d4134ced075487a98ae = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4e97ed2343be9c95e955fb32f269cbf1 = $(`<div id="html_4e97ed2343be9c95e955fb32f269cbf1" style="width: 100.0%; height: 100.0%;"><b>현곡면</b><br>사고 건수: 3건<br>위험도: 저위험</div>`)[0];
+                popup_86f7ffce5bb50d4134ced075487a98ae.setContent(html_4e97ed2343be9c95e955fb32f269cbf1);
+            
+        
+
+        circle_marker_2fa473795bc7be2cc66bf77a07f9e91e.bindPopup(popup_86f7ffce5bb50d4134ced075487a98ae)
+        ;
+
+        
+    
+    
+            var circle_marker_f688b17eea3ea0f2260641cb73451d3c = L.circleMarker(
+                [35.842643, 129.212062],
+                {"bubblingMouseEvents": true, "color": "#326CF9", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#326CF9", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_cad612e2454c5a746f6006486f10504f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8b06f6d92cbddab6b093465d817415d8 = $(`<div id="html_8b06f6d92cbddab6b093465d817415d8" style="width: 100.0%; height: 100.0%;"><b>노동동</b><br>사고 건수: 4건<br>위험도: 저위험</div>`)[0];
+                popup_cad612e2454c5a746f6006486f10504f.setContent(html_8b06f6d92cbddab6b093465d817415d8);
+            
+        
+
+        circle_marker_f688b17eea3ea0f2260641cb73451d3c.bindPopup(popup_cad612e2454c5a746f6006486f10504f)
+        ;
+
+        
+    
+    
+            var circle_marker_436f597b9bb5eeb383382cc8307f4f55 = L.circleMarker(
+                [35.91722, 129.229519],
+                {"bubblingMouseEvents": true, "color": "#FF7607", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF7607", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_aabdfff97930f21e3637e3ece3882501 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9af5a2e6cb0fdd0e579051f9930a2d81 = $(`<div id="html_9af5a2e6cb0fdd0e579051f9930a2d81" style="width: 100.0%; height: 100.0%;"><b>안강읍</b><br>사고 건수: 8건<br>위험도: 중위험</div>`)[0];
+                popup_aabdfff97930f21e3637e3ece3882501.setContent(html_9af5a2e6cb0fdd0e579051f9930a2d81);
+            
+        
+
+        circle_marker_436f597b9bb5eeb383382cc8307f4f55.bindPopup(popup_aabdfff97930f21e3637e3ece3882501)
+        ;
+
+        
+    
+    
+            var circle_marker_a6482921666d7ab93db280fdc60e330d = L.circleMarker(
+                [35.867202, 129.216789],
+                {"bubblingMouseEvents": true, "color": "#FF7607", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF7607", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_9e3b82c6afcba2963f8904366fbe8fef = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7d0987ec45e35bf0db1daf8d8a08473b = $(`<div id="html_7d0987ec45e35bf0db1daf8d8a08473b" style="width: 100.0%; height: 100.0%;"><b>황성동</b><br>사고 건수: 7건<br>위험도: 중위험</div>`)[0];
+                popup_9e3b82c6afcba2963f8904366fbe8fef.setContent(html_7d0987ec45e35bf0db1daf8d8a08473b);
+            
+        
+
+        circle_marker_a6482921666d7ab93db280fdc60e330d.bindPopup(popup_9e3b82c6afcba2963f8904366fbe8fef)
+        ;
+
+        
+    
+    
+            var circle_marker_0d878d76639b4563fbb2967f478ac33a = L.circleMarker(
+                [35.834371, 129.207049],
+                {"bubblingMouseEvents": true, "color": "#FF7607", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF7607", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.5, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_0d6193995a28139a822eafc21d1b00aa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_448c6ad28c5afa09b5e9025750863430 = $(`<div id="html_448c6ad28c5afa09b5e9025750863430" style="width: 100.0%; height: 100.0%;"><b>사정동</b><br>사고 건수: 13건<br>위험도: 중위험</div>`)[0];
+                popup_0d6193995a28139a822eafc21d1b00aa.setContent(html_448c6ad28c5afa09b5e9025750863430);
+            
+        
+
+        circle_marker_0d878d76639b4563fbb2967f478ac33a.bindPopup(popup_0d6193995a28139a822eafc21d1b00aa)
+        ;
+
+        
+    
+    
+            var circle_marker_32258d0031f1f571f3962d3a1c951eac = L.circleMarker(
+                [35.841499, 129.20614],
+                {"bubblingMouseEvents": true, "color": "#FF7607", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF7607", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6.0, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_bdb48e68a912c0ec972b3522a2016ba3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f3946b8d6dcb8ffa33baca31e087dc02 = $(`<div id="html_f3946b8d6dcb8ffa33baca31e087dc02" style="width: 100.0%; height: 100.0%;"><b>노서동</b><br>사고 건수: 12건<br>위험도: 중위험</div>`)[0];
+                popup_bdb48e68a912c0ec972b3522a2016ba3.setContent(html_f3946b8d6dcb8ffa33baca31e087dc02);
+            
+        
+
+        circle_marker_32258d0031f1f571f3962d3a1c951eac.bindPopup(popup_bdb48e68a912c0ec972b3522a2016ba3)
+        ;
+
+        
+    
+    
+            var circle_marker_741a73af526f205deb348a0ed0775bf2 = L.circleMarker(
+                [35.842537, 129.22005],
+                {"bubblingMouseEvents": true, "color": "#EF4136", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#EF4136", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 19.0, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_c80d3bcdfde20bdb3504da25dc775de4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_30ddf483e57a444bb7777d998c67729a = $(`<div id="html_30ddf483e57a444bb7777d998c67729a" style="width: 100.0%; height: 100.0%;"><b>황오동</b><br>사고 건수: 38건<br>위험도: 고위험</div>`)[0];
+                popup_c80d3bcdfde20bdb3504da25dc775de4.setContent(html_30ddf483e57a444bb7777d998c67729a);
+            
+        
+
+        circle_marker_741a73af526f205deb348a0ed0775bf2.bindPopup(popup_c80d3bcdfde20bdb3504da25dc775de4)
+        ;
+
+        
+    
+    
+            var circle_marker_1dc51151f80fbb2b68f9018e6934fa13 = L.circleMarker(
+                [35.850957, 129.207231],
+                {"bubblingMouseEvents": true, "color": "#EF4136", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#EF4136", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_76ad35480ff0237e348964a0657d3b1f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_130a4372e178c42c1e46a018318ff7c9 = $(`<div id="html_130a4372e178c42c1e46a018318ff7c9" style="width: 100.0%; height: 100.0%;"><b>성건동</b><br>사고 건수: 58건<br>위험도: 고위험</div>`)[0];
+                popup_76ad35480ff0237e348964a0657d3b1f.setContent(html_130a4372e178c42c1e46a018318ff7c9);
+            
+        
+
+        circle_marker_1dc51151f80fbb2b68f9018e6934fa13.bindPopup(popup_76ad35480ff0237e348964a0657d3b1f)
+        ;
+
+        
+    
+    
+            var circle_marker_40f3548a29e9ac2ec98dd486f0c8b17d = L.circleMarker(
+                [35.847318, 129.217713],
+                {"bubblingMouseEvents": true, "color": "#EF4136", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#EF4136", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20, "stroke": true, "weight": 3}
+            ).addTo(map_6a4d9c59b4c50276b8d376ac22468441);
+        
+    
+        var popup_aa341d0ab2cfcca852cb2a82471e75ee = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5729ebaabaeea2097c4d3c7754151cc7 = $(`<div id="html_5729ebaabaeea2097c4d3c7754151cc7" style="width: 100.0%; height: 100.0%;"><b>성동동</b><br>사고 건수: 53건<br>위험도: 고위험</div>`)[0];
+                popup_aa341d0ab2cfcca852cb2a82471e75ee.setContent(html_5729ebaabaeea2097c4d3c7754151cc7);
+            
+        
+
+        circle_marker_40f3548a29e9ac2ec98dd486f0c8b17d.bindPopup(popup_aa341d0ab2cfcca852cb2a82471e75ee)
+        ;
+
+        
+    
+</script>
+</html>

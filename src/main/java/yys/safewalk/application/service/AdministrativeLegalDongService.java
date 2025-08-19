@@ -39,13 +39,13 @@ public class AdministrativeLegalDongService {
         List<AdministrativeLegalDongs> results;
 
         if (request.sido() != null && request.sigungu() != null) {
-            results = repository.findByEupMyeonDongAndSidoAndSigungu(
-                    request.eupMyeonDong(), request.sido(), request.sigungu());
+            results = repository.findByEupMyeonDongAndSidoAndSigunguAndCodeTypeNot(
+                    request.eupMyeonDong(), request.sido(), request.sigungu(), "H");
         } else if (request.sido() != null) {
-            results = repository.findByEupMyeonDongAndSido(
-                    request.eupMyeonDong(), request.sido());
+            results = repository.findByEupMyeonDongAndSidoAndCodeTypeNot(
+                    request.eupMyeonDong(), request.sido(), "H");
         } else {
-            results = repository.findByEupMyeonDong(request.eupMyeonDong());
+            results = repository.findByEupMyeonDongAndCodeTypeNot(request.eupMyeonDong(), "H");
         }
 
         return results.stream()
