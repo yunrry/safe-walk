@@ -44,4 +44,13 @@ public interface EmdJpaRepository extends JpaRepository<EmdData, Long> {
 
     Optional<EmdData> findByEmdCd(String emdCd);
 
+    @Query("SELECT e.emdCd, e.emdKorNm, a.latitude, a.longitude, " +
+            "COALESCE(SUM(p.accidentCount), 0) as totalAccident " +
+            "FROM EmdData e " +
+            "LEFT JOIN AdministrativeLegalDongs a ON SUBSTRING(e.emdCd, 1, 8) = SUBSTRING(a.code, 1, 8) " +
+            "LEFT JOIN PedestrianAccidentHotspots p ON SUBSTRING(e.emdCd, 1, 8) = SUBSTRING(p.sidoCode, 1, 8) " +
+            "WHERE SUBSTRING(e.emdCd, 1, 4) = :sidoCode " +
+            "GROUP BY e.emdCd, e.emdKorNm, a.latitude, a.longitude")
+    List<Object[]> findEmdDataBySidoCode(@Param("sidoCode") String sidoCode);
+
     }

@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface EmdRepository {
     List<Emd> findEmdInBounds(Coordinate swCoordinate, Coordinate neCoordinate);
+    List<Emd> findBySidoCode(String sidoCode);
 }

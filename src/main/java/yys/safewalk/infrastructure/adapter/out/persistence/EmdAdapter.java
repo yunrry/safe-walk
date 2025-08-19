@@ -8,6 +8,7 @@ import yys.safewalk.domain.model.Emd;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,12 +30,26 @@ public class EmdAdapter implements EmdRepository {
                 .toList();
     }
 
+    @Override
+    public List<Emd> findBySidoCode(String sidoCode) {
+        List<Object[]> results = emdJpaRepository.findEmdDataBySidoCode(sidoCode);
+
+        return results.stream()
+                .map(this::mapToEmd)
+                .filter(Objects::nonNull)
+                .filter(emd -> emd.getTotalAccident() > 0)
+                .toList();
+    }
+
     private Emd mapToEmd(Object[] row) {
         String emdCd = (String) row[0];
         String emdKorNm = (String) row[1];
         BigDecimal latitude = (BigDecimal) row[2];
         BigDecimal longitude = (BigDecimal) row[3];
         Integer generalAccident = ((Number) row[4]).intValue();
+        if (latitude == null || longitude == null) {
+            return null;
+        }
 
         // 고령자 사고 데이터 추가 조회
         String emdPrefix = emdCd.substring(0, 8);
