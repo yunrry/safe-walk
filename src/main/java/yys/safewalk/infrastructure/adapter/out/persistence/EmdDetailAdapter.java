@@ -72,7 +72,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
     // 고령자 사고 데이터 매핑 메서드 추가
     private AccidentDetail mapToElderlyAccidentDetail(ElderlyPedestrianAccidentHotspots elderlyHotspot) {
         // ID 생성 (고령자 사고 구분을 위해 prefix 추가)
-        String id = "elderly-acc-" + elderlyHotspot.getPointCode();
+        String id = elderlyHotspot.getAccidentHotspotFid().toString();
 
         // 위치명에서 괄호 안 내용만 추출
         String location = extractLocationFromPointName(elderlyHotspot.getPointName());
@@ -193,7 +193,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
 
     private AccidentDetail mapToAccidentDetail(PedestrianAccidentHotspots hotspot) {
         // ID 생성 (점 코드 또는 FID 활용)
-        String id = "acc-" + hotspot.getPointCode();
+        String id = hotspot.getAccidentHotspotFid().toString();
 
         // 위치명에서 괄호 안 내용만 추출
         String location = extractLocationFromPointName(hotspot.getPointName());
