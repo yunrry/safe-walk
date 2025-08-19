@@ -13,9 +13,9 @@ public class TouristSpotAdminController {
 
     private final TouristSpotCoordinateService coordinateService;
 
-//    @PostMapping("/update-coordinates")
-//    public String updateCoordinates() {
-//        coordinateService.updateAllCoordinates();
-//        return "좌표 업데이트 작업이 시작되었습니다.";
-//    }
+    @PostMapping("/update-coordinates")
+    public String updateCoordinates() {
+        coordinateService.updateAllCoordinates();
+        return "좌표 업데이트 작업이 시작되었습니다.";
+    }
 }
