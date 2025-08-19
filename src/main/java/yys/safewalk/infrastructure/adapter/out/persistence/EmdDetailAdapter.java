@@ -9,10 +9,7 @@ import yys.safewalk.entity.EmdData;
 import yys.safewalk.entity.PedestrianAccidentHotspots;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -38,38 +35,31 @@ public class EmdDetailAdapter implements EmdDetailPort {
         List<PedestrianAccidentHotspots> accidents = accidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
         List<ElderlyPedestrianAccidentHotspots> elderlyAccidents = elderlyAccidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
 
-        // 3. 사고 데이터 통합 (sidoCode 기준으로 합병)
-        Map<String, CombinedAccidentData> combinedMap = new HashMap<>();
-
-        // 일반 사고 데이터 처리
-        for (PedestrianAccidentHotspots accident : accidents) {
-            String sidoCode = accident.getSidoCode();
-            combinedMap.put(sidoCode, new CombinedAccidentData(accident, null));
-        }
-
-        // 고령자 사고 데이터 처리 및 합병
-        for (ElderlyPedestrianAccidentHotspots elderlyAccident : elderlyAccidents) {
-            String sidoCode = elderlyAccident.getSidoCode();
-            CombinedAccidentData existing = combinedMap.get(sidoCode);
-
-            if (existing != null) {
-                // 기존 데이터와 합병
-                combinedMap.put(sidoCode, new CombinedAccidentData(existing.generalAccident, elderlyAccident));
-            } else {
-                // 새로운 데이터로 추가
-                combinedMap.put(sidoCode, new CombinedAccidentData(null, elderlyAccident));
-            }
-        }
-
-        // 4. 총 사고 수 계산
-        Integer totalAccident = combinedMap.values().stream()
-                .mapToInt(this::getTotalAccidentCount)
+        // 3. 총 사고 수 계산 (일반 + 고령자)
+        Integer generalTotalAccident = accidents.stream()
+                .mapToInt(accident -> accident.getAccidentCount() != null ? accident.getAccidentCount() : 0)
                 .sum();
 
-        // 5. 사고 상세 정보 매핑
-        List<AccidentDetail> accidentDetails = combinedMap.values().stream()
-                .map(this::mapToCombinedAccidentDetail)
+        Integer elderlyTotalAccident = elderlyAccidents.stream()
+                .mapToInt(accident -> accident.getAccidentCount() != null ? accident.getAccidentCount() : 0)
+                .sum();
+
+        Integer totalAccident = generalTotalAccident + elderlyTotalAccident;
+
+        // 4. 사고 상세 정보 매핑 (일반 사고 데이터)
+        List<AccidentDetail> accidentDetails = new ArrayList<>();
+
+        // 일반 사고 데이터 추가
+        List<AccidentDetail> generalAccidentDetails = accidents.stream()
+                .map(this::mapToAccidentDetail)
                 .collect(Collectors.toList());
+        accidentDetails.addAll(generalAccidentDetails);
+
+        // 고령자 사고 데이터 추가
+        List<AccidentDetail> elderlyAccidentDetails = elderlyAccidents.stream()
+                .map(this::mapToElderlyAccidentDetail)
+                .collect(Collectors.toList());
+        accidentDetails.addAll(elderlyAccidentDetails);
 
         return Optional.of(new EmdDetail(
                 emdData.getEmdKorNm(),
@@ -77,6 +67,37 @@ public class EmdDetailAdapter implements EmdDetailPort {
                 emdCode,
                 accidentDetails
         ));
+    }
+
+    // 고령자 사고 데이터 매핑 메서드 추가
+    private AccidentDetail mapToElderlyAccidentDetail(ElderlyPedestrianAccidentHotspots elderlyHotspot) {
+        // ID 생성 (고령자 사고 구분을 위해 prefix 추가)
+        String id = "elderly-acc-" + elderlyHotspot.getPointCode();
+
+        // 위치명에서 괄호 안 내용만 추출
+        String location = extractLocationFromPointName(elderlyHotspot.getPointName());
+
+        // 사상자 정보 매핑
+        Casualties casualties = new Casualties(
+                elderlyHotspot.getAccidentCount(),      // total <- accident_count
+                elderlyHotspot.getDeathCount(),         // dead <- death_count
+                elderlyHotspot.getSeriousInjuryCount(), // severe <- serious_injury_count
+                elderlyHotspot.getMinorInjuryCount()    // minor <- minor_injury_count
+        );
+
+        // 좌표 정보
+        Coordinate point = new Coordinate(
+                elderlyHotspot.getLatitude(),
+                elderlyHotspot.getLongitude()
+        );
+
+        return new AccidentDetail(
+                id,
+                location,
+                elderlyHotspot.getAccidentCount(),
+                casualties,
+                point
+        );
     }
 
     // 내부 클래스: 통합된 사고 데이터
