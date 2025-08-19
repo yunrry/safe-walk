@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yys.safewalk.application.port.in.GetEmdBySidoCodeQuery;
 import yys.safewalk.application.port.in.GetEmdDetailQuery;
 import yys.safewalk.application.port.in.GetEmdInBoundsQuery;
 import yys.safewalk.application.port.in.dto.EmdDetailResponse;
@@ -19,7 +20,7 @@ import yys.safewalk.application.port.in.dto.EmdResponse;
 import yys.safewalk.application.port.in.dto.EmdSearchRequest;
 import yys.safewalk.application.service.AdministrativeLegalDongService;
 import yys.safewalk.application.usecase.GetEmdDetailUseCase;
-import yys.safewalk.application.usecase.GetEmdInBoundsUseCase;
+import yys.safewalk.application.usecase.GetEmdUseCase;
 import yys.safewalk.domain.model.Coordinate;
 
 import java.math.BigDecimal;
@@ -31,7 +32,7 @@ import java.util.List;
 @Tag(name = "EMD", description = "법정동 관련 API")
 public class EmdController {
 
-    private final GetEmdInBoundsUseCase getEmdInBoundsUseCase;
+    private final GetEmdUseCase getEmdUseCase;
     private final GetEmdDetailUseCase getEmdDetailUseCase;
     private final AdministrativeLegalDongService administrativeLegalDongService;
 
@@ -57,7 +58,7 @@ public class EmdController {
                 new Coordinate(neLat, neLng)
         );
 
-        List<EmdInBoundsResponse> response = getEmdInBoundsUseCase.getEmdInBounds(query);
+        List<EmdInBoundsResponse> response = getEmdUseCase.getEmdInBounds(query);
         return ResponseEntity.ok(response);
     }
 
@@ -225,4 +226,41 @@ public class EmdController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/emd/sido/{sidoCode}")
+    @Operation(
+            summary = "시도 코드별 법정동 조회",
+            description = "시도 코드(앞 4자리)를 기반으로 해당 지역의 모든 법정동을 조회합니다. 일반 사고와 고령자 사고를 합친 총 사고 수가 포함됩니다.",
+            parameters = {
+                    @Parameter(name = "sidoCode", description = "시도 코드 (4자리)", example = "4713", required = true)
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "시도별 법정동 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EmdInBoundsResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (시도 코드가 4자리가 아님)",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public ResponseEntity<List<EmdInBoundsResponse>> getEmdBySidoCode(
+            @PathVariable String sidoCode) {
+
+        GetEmdBySidoCodeQuery query = new GetEmdBySidoCodeQuery(sidoCode);
+        List<EmdInBoundsResponse> response = getEmdUseCase.getEmdBySidoCode(query);
+
+        return ResponseEntity.ok(response);
+    }
 }
