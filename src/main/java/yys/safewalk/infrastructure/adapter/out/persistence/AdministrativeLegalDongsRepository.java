@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import yys.safewalk.entity.AdministrativeLegalDongs;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,15 @@ public interface AdministrativeLegalDongsRepository extends JpaRepository<Admini
     List<AdministrativeLegalDongs> findByEupMyeonDongOrderBySidoAndSigungu(@Param("eupMyeonDong") String eupMyeonDong);
 
     Optional<AdministrativeLegalDongs> findByCodeAndCodeTypeNot(String code, String codeType);
+
+    List<AdministrativeLegalDongs> findByLatitudeBetweenAndLongitudeBetweenAndCodeTypeNot(
+            BigDecimal latitude, BigDecimal latitude2,
+            BigDecimal longitude, BigDecimal longitude2,
+            String codeType);
+
+    // 시도별 법정동 조회 (codeType != 'H')
+    List<AdministrativeLegalDongs> findBySidoStartingWithAndCodeTypeNot(String sido, String codeType);
+
+
 
 }
