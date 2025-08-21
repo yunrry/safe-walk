@@ -74,11 +74,28 @@ public class EmdController {
                     @Parameter(name = "emdCode", description = "법정동 코드", example = "11140118")
             }
     )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "법정동 상세 조회 성공 (데이터가 없을 수 있음)",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EmdDetailResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
     public ResponseEntity<EmdDetailResponse> getEmdDetail(
             @PathVariable String emdCode
     ) {
         GetEmdDetailQuery query = new GetEmdDetailQuery(emdCode);
         EmdDetailResponse response = getEmdDetailUseCase.getEmdDetail(query);
+        
+        // null이어도 그대로 반환 (JSON에서 null로 표시)
         return ResponseEntity.ok(response);
     }
 
@@ -128,12 +145,13 @@ public class EmdController {
 
         List<EmdInBoundsResponse> emdsInBounds = getEmdUseCase.getEmdInBounds(boundsQuery);
 
-        // 2. 각 법정동 코드로 상세 정보 조회
+        // 2. 각 법정동 코드로 상세 정보 조회 (null 값 필터링)
         List<EmdDetailResponse> detailResponses = emdsInBounds.stream()
                 .map(emd -> {
                     GetEmdDetailQuery detailQuery = new GetEmdDetailQuery(emd.EMD_CD());
                     return getEmdDetailUseCase.getEmdDetail(detailQuery);
                 })
+                .filter(response -> response != null)  // null 값 필터링
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(detailResponses);
