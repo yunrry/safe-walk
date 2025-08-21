@@ -19,8 +19,13 @@ public class EmdDetailService implements GetEmdDetailUseCase {
 
     @Override
     public EmdDetailResponse getEmdDetail(GetEmdDetailQuery query) {
+        // 데이터가 없으면 null 반환
         EmdDetail emdDetail = emdDetailPort.findByEmdCode(query.getEmdCode())
-                .orElseThrow(() -> new IllegalArgumentException("법정동을 찾을 수 없습니다: " + query.getEmdCode()));
+                .orElse(null);
+        
+        if (emdDetail == null) {
+            return null;
+        }
 
         return mapToResponse(emdDetail);
     }
