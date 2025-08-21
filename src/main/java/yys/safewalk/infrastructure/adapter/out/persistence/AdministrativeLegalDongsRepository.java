@@ -36,14 +36,18 @@ public interface AdministrativeLegalDongsRepository extends JpaRepository<Admini
 
     Optional<AdministrativeLegalDongs> findByCodeAndCodeTypeNot(String code, String codeType);
 
+    // 좌표 범위 검색 (개선된 파라미터명)
     List<AdministrativeLegalDongs> findByLatitudeBetweenAndLongitudeBetweenAndCodeTypeNot(
-            BigDecimal latitude, BigDecimal latitude2,
-            BigDecimal longitude, BigDecimal longitude2,
+            BigDecimal swLat, BigDecimal neLat,
+            BigDecimal swLng, BigDecimal neLng,
             String codeType);
 
-    // 시도별 법정동 조회 (codeType != 'H')
+    // 시도별 법정동 조회 (정확한 매칭)
+    List<AdministrativeLegalDongs> findBySidoAndCodeTypeNot(String sido, String codeType);
+
+    // EMD 코드 패턴 검색 (시도 코드 기반)
+    List<AdministrativeLegalDongs> findByCodeStartingWithAndCodeTypeNot(String codePrefix, String codeType);
+
+    // 시도별 법정동 조회 (기존 유지, 하위 호환성)
     List<AdministrativeLegalDongs> findBySidoStartingWithAndCodeTypeNot(String sido, String codeType);
-
-
-
 }
