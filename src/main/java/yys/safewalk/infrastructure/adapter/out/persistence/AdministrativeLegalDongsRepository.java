@@ -32,4 +32,7 @@ public interface AdministrativeLegalDongsRepository extends JpaRepository<Admini
     // 읍면동명으로 검색 (codeType이 H가 아닌 것만)
     @Query("SELECT a FROM AdministrativeLegalDongs a WHERE a.eupMyeonDong = :eupMyeonDong AND a.codeType != 'H' ORDER BY a.sido, a.sigungu")
     List<AdministrativeLegalDongs> findByEupMyeonDongOrderBySidoAndSigungu(@Param("eupMyeonDong") String eupMyeonDong);
+
+    Optional<AdministrativeLegalDongs> findByCodeAndCodeTypeNot(String code, String codeType);
+
 }

@@ -145,14 +145,13 @@ public class EmdController {
 
         List<EmdInBoundsResponse> emdsInBounds = getEmdUseCase.getEmdInBounds(boundsQuery);
 
-        // 2. 각 법정동 코드로 상세 정보 조회 (null 값 필터링)
+        // 2. 각 법정동 코드로 상세 정보 조회 (null 값도 포함)
         List<EmdDetailResponse> detailResponses = emdsInBounds.stream()
                 .map(emd -> {
                     GetEmdDetailQuery detailQuery = new GetEmdDetailQuery(emd.EMD_CD());
                     return getEmdDetailUseCase.getEmdDetail(detailQuery);
                 })
-                .filter(response -> response != null)  // null 값 필터링
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());  // null 값 필터링 제거
 
         return ResponseEntity.ok(detailResponses);
     }

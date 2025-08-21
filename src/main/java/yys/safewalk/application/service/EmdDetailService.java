@@ -56,7 +56,7 @@ public class EmdDetailService implements GetEmdDetailUseCase {
         return new EmdDetailResponse(
                 emdDetail.getName(),
                 emdDetail.getTotalAccident(),
-                emdDetail.getEmdCode(),
+                emdDetail.getEmdCode(),  // emdCode -> EMD_CD로 매핑
                 accidentResponses
         );
     }
