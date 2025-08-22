@@ -11,6 +11,7 @@ import yys.safewalk.entity.AdministrativeLegalDongs;
 import yys.safewalk.infrastructure.adapter.out.persistence.AdministrativeLegalDongsRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +31,13 @@ public class AdministrativeLegalDongService {
 
         return results.stream()
                 .map(this::toEmdResponse)
+                .collect(Collectors.toMap(
+                        EmdResponse::code,  // 8자리 코드를 키로 사용
+                        response -> response,  // 값은 EmdResponse 그대로
+                        (existing, replacement) -> existing  // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
                 .toList();
     }
 
@@ -48,14 +56,19 @@ public class AdministrativeLegalDongService {
             results = repository.findByEupMyeonDongAndCodeTypeNot(request.eupMyeonDong(), "H");
         }
 
-
         if (results.isEmpty()) {
             throw new IllegalArgumentException("해당 읍면동을 찾을 수 없습니다: " + request.eupMyeonDong());
         }
 
-
         return results.stream()
                 .map(this::toEmdResponse)
+                .collect(Collectors.toMap(
+                        EmdResponse::code,  // 8자리 코드를 키로 사용
+                        response -> response,  // 값은 EmdResponse 그대로
+                        (existing, replacement) -> existing  // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
                 .toList();
     }
 
@@ -84,6 +97,13 @@ public class AdministrativeLegalDongService {
 
         return results.stream()
                 .map(this::toEmdResponse)
+                .collect(Collectors.toMap(
+                        EmdResponse::code,  // 8자리 코드를 키로 사용
+                        response -> response,  // 값은 EmdResponse 그대로
+                        (existing, replacement) -> existing  // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
                 .toList();
     }
 

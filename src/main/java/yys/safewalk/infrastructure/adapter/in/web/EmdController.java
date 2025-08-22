@@ -201,7 +201,7 @@ public class EmdController {
             summary = "읍면동명 상세 검색",
             description = "읍면동명을 기반으로 상세 검색을 제공합니다.",
             parameters = {
-                    @Parameter(name = "eupMyeonDong", description = "읍면동명", example = "청운효자동"),
+                    @Parameter(name = "eupMyeonDong", description = "읍면동명", example = "청운동"),
                     @Parameter(name = "sido", description = "시도명", example = "서울특별시"),
                     @Parameter(name = "sigungu", description = "시군구명", example = "종로구")
             }
