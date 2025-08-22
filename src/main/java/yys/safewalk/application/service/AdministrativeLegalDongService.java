@@ -48,6 +48,12 @@ public class AdministrativeLegalDongService {
             results = repository.findByEupMyeonDongAndCodeTypeNot(request.eupMyeonDong(), "H");
         }
 
+
+        if (results.isEmpty()) {
+            throw new IllegalArgumentException("해당 읍면동을 찾을 수 없습니다: " + request.eupMyeonDong());
+        }
+
+
         return results.stream()
                 .map(this::toEmdResponse)
                 .toList();
@@ -97,7 +103,7 @@ public class AdministrativeLegalDongService {
     private EmdResponse toEmdResponse(AdministrativeLegalDongs entity) {
         // 코드에서 마지막 00 제거 (10자리 -> 8자리)
         String responseCode = entity.getCode();
-        if (responseCode != null && responseCode.endsWith("00") && responseCode.length() == 10) {
+        if (responseCode != null && responseCode.length() != 8) {
             responseCode = responseCode.substring(0, 8);
         }
 

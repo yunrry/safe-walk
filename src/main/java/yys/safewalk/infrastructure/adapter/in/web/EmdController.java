@@ -293,7 +293,7 @@ public class EmdController {
             )
     })
     public ResponseEntity<List<EmdResponse>> searchByName(
-            @Parameter(description = "읍면동명", example = "청운효자동")
+            @Parameter(description = "읍면동명", example = "청운동")
             @RequestParam String name
     ) {
         List<EmdResponse> response = administrativeLegalDongService.searchByEupMyeonDongOnly(name);
