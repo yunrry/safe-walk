@@ -32,7 +32,14 @@ public class EmdService implements GetEmdUseCase {
 
         return emds.stream()
                 .map(this::mapToEmdInBoundsResponse)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(
+                        EmdInBoundsResponse::EMD_CD,  // 8자리 코드를 키로 사용
+                        response -> response,  // 값은 EmdInBoundsResponse 그대로
+                        (existing, replacement) -> existing  // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
+                .toList();
     }
 
     @Override
@@ -43,14 +50,27 @@ public class EmdService implements GetEmdUseCase {
 
         return emds.stream()
                 .map(this::mapToEmdInBoundsResponse)
-                .collect(Collectors.toList());
+                .collect(Collectors.toMap(
+                        EmdInBoundsResponse::EMD_CD,  // 8자리 코드를 키로 사용
+                        response -> response,  // 값은 EmdInBoundsResponse 그대로
+                        (existing, replacement) -> existing  // 중복 시 기존 값 유지
+                ))
+                .values()
+                .stream()
+                .toList();
     }
 
     private EmdInBoundsResponse mapToEmdInBoundsResponse(Emd emd) {
+        // 코드를 8자리로 자르기 (10자리 -> 8자리)
+        String responseCode = emd.getEmdCd();
+        if (responseCode != null && responseCode.length() != 8) {
+            responseCode = responseCode.substring(0, 8);
+        }
+
         return new EmdInBoundsResponse(
                 emd.getName(),
                 emd.getTotalAccident(),
-                emd.getEmdCd(),
+                responseCode,  // 8자리로 잘린 코드 사용
                 emd.getCenterPoint().latitude(),
                 emd.getCenterPoint().longitude()
         );
