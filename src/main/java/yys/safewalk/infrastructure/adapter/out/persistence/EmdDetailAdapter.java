@@ -24,37 +24,29 @@ public class EmdDetailAdapter implements EmdDetailPort {
 
     @Override
     public Optional<EmdDetail> findByEmdCode(String emdCode) {
-        System.out.println("🔍 DEBUG: findByEmdCode 호출됨 - emdCode: " + emdCode);
         
         // 1. AdministrativeLegalDongs에서 지역 정보 조회 (emdCode + "00" 형태로, codeType이 'H'가 아닌 것만)
         String searchCode = emdCode.endsWith("00") ? emdCode : emdCode + "00";
-        System.out.println(" DEBUG: 검색할 코드: " + searchCode);
         
         // codeType이 'H'가 아닌 것만 조회
         Optional<AdministrativeLegalDongs> legalDongOpt = administrativeLegalDongsRepository.findByCodeAndCodeTypeNot(searchCode, "H");
-        System.out.println("🔍 DEBUG: AdministrativeLegalDongs 조회 결과: " + (legalDongOpt.isPresent() ? "존재함" : "존재하지 않음"));
         
         if (legalDongOpt.isEmpty()) {
-            System.out.println("❌ DEBUG: administrative_legal_dongs 테이블에 해당 코드가 없음 (codeType != 'H'): " + searchCode);
             return Optional.empty();
         }
 
         AdministrativeLegalDongs legalDong = legalDongOpt.get();
-        System.out.println("✅ DEBUG: 지역 정보 - 시도: " + legalDong.getSido() + ", 시군구: " + legalDong.getSigungu() + ", 읍면동: " + legalDong.getEupMyeonDong() + ", codeType: " + legalDong.getCodeType());
+
 
         // 2. 해당 법정동의 사고 데이터 조회
         String emdPrefix = emdCode.substring(0, 8); // EMD_CD의 앞 8자리
-        System.out.println("🔍 DEBUG: emdPrefix 계산: " + emdCode + " -> " + emdPrefix);
-        
+
         List<PedestrianAccidentHotspots> accidents = accidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
         List<ElderlyPedestrianAccidentHotspots> elderlyAccidents = elderlyAccidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
-        
-        System.out.println(" DEBUG: 일반 사고 데이터 수: " + accidents.size());
-        System.out.println("🔍 DEBUG: 고령자 사고 데이터 수: " + elderlyAccidents.size());
+
 
         // 3. 사고 데이터가 없는 경우에도 기본 정보 포함하여 반환
         if (accidents.isEmpty() && elderlyAccidents.isEmpty()) {
-            System.out.println("✅ DEBUG: 사고 데이터 없음, 기본 정보만 반환");
             return Optional.of(new EmdDetail(
                     legalDong.getEupMyeonDong(),  // 읍면동명 (AdministrativeLegalDongs에서)
                     0,                             // totalAccident = 0
@@ -64,8 +56,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
         }
 
         // 4. 사고 데이터가 있는 경우 기존 로직 수행
-        System.out.println("✅ DEBUG: 사고 데이터 있음, 상세 정보 포함하여 반환");
-        
+
         // 총 사고 수 계산 (일반 + 고령자)
         Integer generalTotalAccident = accidents.stream()
                 .mapToInt(accident -> accident.getAccidentCount() != null ? accident.getAccidentCount() : 0)
@@ -76,7 +67,6 @@ public class EmdDetailAdapter implements EmdDetailPort {
                 .sum();
 
         Integer totalAccident = generalTotalAccident + elderlyTotalAccident;
-        System.out.println(" DEBUG: 총 사고 수: " + totalAccident + " (일반: " + generalTotalAccident + ", 고령자: " + elderlyTotalAccident + ")");
 
         // 사고 상세 정보 매핑
         List<AccidentDetail> accidentDetails = new ArrayList<>();
