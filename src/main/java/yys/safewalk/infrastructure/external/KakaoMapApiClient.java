@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Slf4j
 @Component
@@ -45,6 +46,15 @@ public class KakaoMapApiClient {
                     !response.documents().isEmpty()) {
 
                 log.debug("검색 성공: {} -> 결과 {}개", query, response.documents().size());
+                
+                // 원본 JSON 응답 로깅 추가
+                log.info("카카오 API 원본 응답:");
+                for (int i = 0; i < response.documents().size(); i++) {
+                    KakaoLocationResponse.Document doc = response.documents().get(i);
+                    log.info("  결과 {}: x={}, y={}, placeName={}, addressName={}", 
+                            i + 1, doc.x(), doc.y(), doc.placeName(), doc.addressName());
+                }
+
                 return Optional.of(response.documents().get(0));
             }
 
@@ -61,10 +71,10 @@ public class KakaoMapApiClient {
             List<Document> documents
     ) {
         public record Document(
-                String x, // longitude
-                String y, // latitude
-                String placeName,
-                String addressName
+                @JsonProperty("x") String x, // longitude
+                @JsonProperty("y") String y, // latitude
+                @JsonProperty("place_name") String placeName,
+                @JsonProperty("address_name") String addressName
         ) {
             public BigDecimal getLongitude() {
                 return new BigDecimal(x);
@@ -72,6 +82,10 @@ public class KakaoMapApiClient {
 
             public BigDecimal getLatitude() {
                 return new BigDecimal(y);
+            }
+
+            public String getAddressName() {
+                return addressName;
             }
         }
     }

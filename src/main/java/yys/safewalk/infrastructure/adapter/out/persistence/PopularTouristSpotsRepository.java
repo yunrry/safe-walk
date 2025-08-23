@@ -25,4 +25,9 @@ public interface PopularTouristSpotsRepository extends JpaRepository<PopularTour
             @Param("swLng") Double swLng,
             @Param("neLng") Double neLng
     );
+
+    /**
+     * 시군구명이 null인 관광지 조회
+     */
+    List<PopularTouristSpots> findBySigunguNameIsNull();
 }
