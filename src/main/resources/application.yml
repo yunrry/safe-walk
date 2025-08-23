@@ -47,6 +47,10 @@ kakao:
   api:
     key: ${KAKAO_API_KEY:your-kakao-api-key}
 
+naver:
+  api:
+    client-id: iR0esJl2LAiYkZGwXukQ
+    client-secret: ${NAVER_SECRET:your-naver-api-key}
 
 
 
