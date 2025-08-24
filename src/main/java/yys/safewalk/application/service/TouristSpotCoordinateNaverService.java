@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yys.safewalk.entity.PopularTouristSpots;
-import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsRepository;
+import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.NaverLocalSearchApiClient;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TouristSpotCoordinateNaverService {
 
-    private final PopularTouristSpotsRepository repository;
+    private final PopularTouristSpotsJPARepository popularTouristSpotsJPARepository;
     private final NaverLocalSearchApiClient naverApiClient;
     
     // 병렬 처리를 위한 스레드 풀 (네이버 API 제한 고려하여 크기 조정)
@@ -30,7 +30,7 @@ public class TouristSpotCoordinateNaverService {
 
     @Transactional
     public void updateAllCoordinates() {
-        List<PopularTouristSpots> spotsWithoutCoordinates = repository.findByLongitudeIsNullOrLatitudeIsNull();
+        List<PopularTouristSpots> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
 
         log.info("네이버 API로 좌표가 없는 관광지 {}개 발견", spotsWithoutCoordinates.size());
 
@@ -132,8 +132,8 @@ public class TouristSpotCoordinateNaverService {
                                         item.address(), extractedSigungu);
                             }
                         }
-                        
-                        repository.save(spot);
+
+                        popularTouristSpotsJPARepository.save(spot);
                         log.debug("좌표 업데이트 성공: {} -> ({}, {})",
                                 searchQuery, spot.getLongitude(), spot.getLatitude());
                     },
@@ -191,8 +191,8 @@ public class TouristSpotCoordinateNaverService {
                                 spot.setSigunguName(extractedSigungu);
                             }
                         }
-                        
-                        repository.save(spot);
+
+                        popularTouristSpotsJPARepository.save(spot);
                         log.debug("대체 검색으로 좌표 업데이트 성공: {} -> ({}, {})",
                                 alternativeQuery, spot.getLongitude(), spot.getLatitude());
                     },
@@ -351,7 +351,7 @@ public class TouristSpotCoordinateNaverService {
      */
     @Transactional
     public void updateCoordinateById(Long id) {
-        PopularTouristSpots spot = repository.findById(id)
+        PopularTouristSpots spot = popularTouristSpotsJPARepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID " + id + "에 해당하는 관광지를 찾을 수 없습니다."));
         
         log.info("ID {} 관광지 좌표 업데이트 시작 (네이버 API): {}", id, spot.getSpotName());

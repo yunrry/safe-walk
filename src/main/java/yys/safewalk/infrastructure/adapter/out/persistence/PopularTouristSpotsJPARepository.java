@@ -9,7 +9,7 @@ import yys.safewalk.entity.PopularTouristSpots;
 import java.util.List;
 
 @Repository
-public interface PopularTouristSpotsRepository extends JpaRepository<PopularTouristSpots, Long> {
+public interface PopularTouristSpotsJPARepository extends JpaRepository<PopularTouristSpots, Long> {
 
     List<PopularTouristSpots> findByLongitudeIsNullOrLatitudeIsNull();
 
@@ -30,4 +30,7 @@ public interface PopularTouristSpotsRepository extends JpaRepository<PopularTour
      * 시군구명이 null인 관광지 조회
      */
     List<PopularTouristSpots> findBySigunguNameIsNull();
+
+
+    List<PopularTouristSpots> findBySidoCodeAndMode(String sidoCode, String mode);
 }

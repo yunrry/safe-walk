@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
+import yys.safewalk.application.port.in.dto.TouristSpotsInStateResponse;
 import yys.safewalk.application.service.TouristSpotAreaService;
+import yys.safewalk.application.service.TouristSpotsInStateService;
 import yys.safewalk.domain.model.Coordinate;
 
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ import java.util.List;
 public class TouristSpotController {
 
     private final TouristSpotAreaService touristSpotAreaService;
+    private final TouristSpotsInStateService touristSpotsInStateService;
 
     @GetMapping("/tourist-spots")
     @Operation(
@@ -68,4 +71,44 @@ public class TouristSpotController {
         List<TouristSpotResponse> response = touristSpotAreaService.getTouristSpotsByArea(swCoordinate, neCoordinate);
         return ResponseEntity.ok(response);
     }
+
+
+    @GetMapping("/tourist-spots/state")
+    @Operation(
+            summary = "특정 지역 관광지 조회",
+            description = "도내 관광지 목록을 조회합니다.",
+            parameters = {
+                    @Parameter(name = "code", description = "도시코드", example = "52"),
+                    @Parameter(name = "mode", description = "인기관광지/중심관광지/지역맛집", example = "인기관광지"),
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "관광지 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = TouristSpotResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (좌표 유효성 검증 실패)",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public ResponseEntity<List<TouristSpotsInStateResponse>> getTouristSpotsByArea(
+            @RequestParam String code,
+            @RequestParam String mode
+    ) {
+
+        List<TouristSpotsInStateResponse> response = touristSpotsInStateService.getTouristSpotsInState(code, mode);
+        return ResponseEntity.ok(response);
+    }
+
 }

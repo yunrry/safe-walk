@@ -6,11 +6,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import yys.safewalk.application.port.in.dto.TouristSpotAreaRequest;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
 import yys.safewalk.domain.model.Coordinate;
 import yys.safewalk.entity.PopularTouristSpots;
-import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsRepository;
+import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,7 +22,7 @@ import static org.mockito.Mockito.when;
 class TouristSpotAreaServiceTest {
 
     @Mock
-    private PopularTouristSpotsRepository popularTouristSpotsRepository;
+    private PopularTouristSpotsJPARepository popularTouristSpotsJPARepository;
 
     @InjectMocks
     private TouristSpotAreaService touristSpotAreaService;
@@ -43,7 +42,7 @@ class TouristSpotAreaServiceTest {
                 .longitude(BigDecimal.valueOf(129.2233))
                 .build();
 
-        when(popularTouristSpotsRepository.findByLatitudeBetweenAndLongitudeBetween(
+        when(popularTouristSpotsJPARepository.findByLatitudeBetweenAndLongitudeBetween(
                 any(Double.class), any(Double.class), any(Double.class), any(Double.class)))
                 .thenReturn(List.of(spot));
 

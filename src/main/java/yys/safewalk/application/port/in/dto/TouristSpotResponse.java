@@ -1,8 +1,12 @@
 package yys.safewalk.application.port.in.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import yys.safewalk.domain.model.Coordinate;
 
 public record TouristSpotResponse(
+        @JsonProperty("id")
+        String touristSpotId,
+
         @JsonProperty("spot_name")
         String spotName,
 
@@ -12,7 +16,9 @@ public record TouristSpotResponse(
         @JsonProperty("sigungu_name")
         String sigunguName,
 
-        Double latitude,
+        @JsonProperty("category")
+        String category,
 
-        Double longitude
+        @JsonProperty("Coordinate")
+        Coordinate coordinate
 ) {}

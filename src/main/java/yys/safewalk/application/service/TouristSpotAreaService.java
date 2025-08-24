@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
 import yys.safewalk.domain.model.Coordinate;
-import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsRepository;
+import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class TouristSpotAreaService {
 
-    private final PopularTouristSpotsRepository popularTouristSpotsRepository;
+    private final PopularTouristSpotsJPARepository popularTouristSpotsJPARepository;
 
     public List<TouristSpotResponse> getTouristSpotsByArea(Coordinate swCoordinate, Coordinate neCoordinate) {
         validateCoordinates(swCoordinate, neCoordinate);
 
-        return popularTouristSpotsRepository.findByLatitudeBetweenAndLongitudeBetween(
+        return popularTouristSpotsJPARepository.findByLatitudeBetweenAndLongitudeBetween(
                         swCoordinate.latitude().doubleValue(),
                         neCoordinate.latitude().doubleValue(),
                         swCoordinate.longitude().doubleValue(),
@@ -27,11 +27,15 @@ public class TouristSpotAreaService {
                 )
                 .stream()
                 .map(spot -> new TouristSpotResponse(
+                        spot.getTouristSpotId(),
                         spot.getSpotName(),
                         spot.getSidoName(),
                         spot.getSigunguName(),
-                        spot.getLatitude() != null ? spot.getLatitude().doubleValue() : null,
-                        spot.getLongitude() != null ? spot.getLongitude().doubleValue() : null
+                        spot.getCategory(),
+                        new Coordinate(
+                        spot.getLatitude(),
+                        spot.getLongitude()
+                        )
                 ))
                 .toList();
     }

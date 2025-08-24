@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yys.safewalk.entity.PopularTouristSpots;
-import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsRepository;
+import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.KakaoMapApiClient;
 
 
@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TouristSpotCoordinateService {
 
-    private final PopularTouristSpotsRepository repository;
+    private final PopularTouristSpotsJPARepository popularTouristSpotsJPARepository;
     private final KakaoMapApiClient kakaoMapApiClient;
 
     @Transactional
     public void updateAllCoordinates() {
-        List<PopularTouristSpots> spotsWithoutCoordinates = repository.findByLongitudeIsNullOrLatitudeIsNull();
+        List<PopularTouristSpots> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
 
         log.info("좌표가 없는 관광지 {}개 발견", spotsWithoutCoordinates.size());
 
@@ -101,8 +101,8 @@ public class TouristSpotCoordinateService {
                                         document.getAddressName(), extractedSigungu);
                             }
                         }
-                        
-                        repository.save(spot);
+
+                        popularTouristSpotsJPARepository.save(spot);
                         log.debug("좌표 업데이트 성공: {} -> ({}, {})",
                                 searchQuery, document.getLongitude(), document.getLatitude());
                     },
@@ -143,8 +143,8 @@ public class TouristSpotCoordinateService {
                                 spot.setSigunguName(extractedSigungu);
                             }
                         }
-                        
-                        repository.save(spot);
+
+                        popularTouristSpotsJPARepository.save(spot);
                         log.debug("대체 검색으로 좌표 업데이트 성공: {} -> ({}, {})",
                                 alternativeQuery, document.getLongitude(), document.getLatitude());
                     },
