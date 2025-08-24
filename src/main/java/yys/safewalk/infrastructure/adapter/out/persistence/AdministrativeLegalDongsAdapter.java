@@ -6,8 +6,6 @@ import yys.safewalk.application.port.out.EmdRepository;
 import yys.safewalk.domain.model.Coordinate;
 import yys.safewalk.domain.model.Emd;
 import yys.safewalk.entity.AdministrativeLegalDongs;
-import yys.safewalk.entity.ElderlyPedestrianAccidentHotspots;
-import yys.safewalk.entity.PedestrianAccidentHotspots;
 
 import java.math.BigDecimal;
 import java.util.List;

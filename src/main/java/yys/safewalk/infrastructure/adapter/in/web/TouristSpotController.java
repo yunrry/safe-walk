@@ -8,17 +8,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import yys.safewalk.application.port.in.GetTouristSpotAccidentsQuery;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
 import yys.safewalk.application.port.in.dto.TouristSpotsInStateResponse;
 import yys.safewalk.application.service.TouristSpotAreaService;
 import yys.safewalk.application.service.TouristSpotsInStateService;
 import yys.safewalk.domain.model.Coordinate;
+import yys.safewalk.domain.model.TouristSpotAccidentResponse;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1")
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class TouristSpotController {
 
     private final TouristSpotAreaService touristSpotAreaService;
     private final TouristSpotsInStateService touristSpotsInStateService;
+    private final GetTouristSpotAccidentsQuery getTouristSpotAccidentsQuery;
 
     @GetMapping("/tourist-spots")
     @Operation(
@@ -109,6 +114,35 @@ public class TouristSpotController {
 
         List<TouristSpotsInStateResponse> response = touristSpotsInStateService.getTouristSpotsInState(code, mode);
         return ResponseEntity.ok(response);
+    }
+
+
+
+    @GetMapping("/tourist-spots/{spotId}")
+    @Operation(
+            summary = "관광지 반경 사고 조회",
+            description = "관광지 반경 사고 목록을 조회합니다.",
+            parameters = {
+                    @Parameter(name = "spotId", description = "관광지ID", example = "4188964d50de8143b3ea67e371d64678"),
+                    @Parameter(name = "km", description = "반경 크기", example = "5"),
+            }
+    )
+    public ResponseEntity<TouristSpotAccidentResponse> getAccidentsInRadius(
+            @PathVariable String spotId,
+            @RequestParam(defaultValue = "5") Integer km) {
+
+        log.info("관광지 반경 내 교통사고 조회 요청: spotId={}, radius={}km", spotId, km);
+
+        try {
+            TouristSpotAccidentResponse response = getTouristSpotAccidentsQuery.getAccidentsInRadius(spotId, km);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            log.warn("잘못된 요청: {}", e.getMessage());
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            log.error("교통사고 조회 중 오류 발생", e);
+            return ResponseEntity.internalServerError().build();
+        }
     }
 
 }

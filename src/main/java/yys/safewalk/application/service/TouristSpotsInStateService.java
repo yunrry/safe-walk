@@ -1,13 +1,10 @@
 package yys.safewalk.application.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yys.safewalk.application.port.in.dto.TouristSpotResponse;
 import yys.safewalk.application.port.in.dto.TouristSpotsInStateResponse;
 import yys.safewalk.domain.model.Coordinate;
-import yys.safewalk.entity.PopularTouristSpots;
 import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 
 import java.util.List;

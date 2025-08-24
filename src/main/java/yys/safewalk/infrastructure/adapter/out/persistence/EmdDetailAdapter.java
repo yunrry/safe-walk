@@ -5,9 +5,8 @@ import org.springframework.stereotype.Component;
 import yys.safewalk.application.port.out.EmdDetailPort;
 import yys.safewalk.domain.model.*;
 import yys.safewalk.entity.AdministrativeLegalDongs;
-import yys.safewalk.entity.ElderlyPedestrianAccidentHotspots;
-import yys.safewalk.entity.EmdData;
-import yys.safewalk.entity.PedestrianAccidentHotspots;
+import yys.safewalk.entity.ElderlyPedestrianAccidentHotspotsEntity;
+import yys.safewalk.entity.PedestrianAccidentHotspotsEntity;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -41,8 +40,8 @@ public class EmdDetailAdapter implements EmdDetailPort {
         // 2. 해당 법정동의 사고 데이터 조회
         String emdPrefix = emdCode.substring(0, 8); // EMD_CD의 앞 8자리
 
-        List<PedestrianAccidentHotspots> accidents = accidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
-        List<ElderlyPedestrianAccidentHotspots> elderlyAccidents = elderlyAccidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
+        List<PedestrianAccidentHotspotsEntity> accidents = accidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
+        List<ElderlyPedestrianAccidentHotspotsEntity> elderlyAccidents = elderlyAccidentJpaRepository.findBySidoCodeStartingWith(emdPrefix);
 
 
         // 3. 사고 데이터가 없는 경우에도 기본 정보 포함하여 반환
@@ -92,7 +91,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
     }
 
     // 고령자 사고 데이터 매핑 메서드 추가
-    private AccidentDetail mapToElderlyAccidentDetail(ElderlyPedestrianAccidentHotspots elderlyHotspot) {
+    private AccidentDetail mapToElderlyAccidentDetail(ElderlyPedestrianAccidentHotspotsEntity elderlyHotspot) {
         // ID 생성 (고령자 사고 구분을 위해 prefix 추가)
         String id = elderlyHotspot.getAccidentHotspotFid().toString();
 
@@ -124,10 +123,10 @@ public class EmdDetailAdapter implements EmdDetailPort {
 
     // 내부 클래스: 통합된 사고 데이터
     private static class CombinedAccidentData {
-        final PedestrianAccidentHotspots generalAccident;
-        final ElderlyPedestrianAccidentHotspots elderlyAccident;
+        final PedestrianAccidentHotspotsEntity generalAccident;
+        final ElderlyPedestrianAccidentHotspotsEntity elderlyAccident;
 
-        CombinedAccidentData(PedestrianAccidentHotspots generalAccident, ElderlyPedestrianAccidentHotspots elderlyAccident) {
+        CombinedAccidentData(PedestrianAccidentHotspotsEntity generalAccident, ElderlyPedestrianAccidentHotspotsEntity elderlyAccident) {
             this.generalAccident = generalAccident;
             this.elderlyAccident = elderlyAccident;
         }
@@ -152,9 +151,9 @@ public class EmdDetailAdapter implements EmdDetailPort {
     // 통합된 사고 상세 정보 매핑 메서드
     private AccidentDetail mapToCombinedAccidentDetail(CombinedAccidentData combined) {
         // 기본 정보는 일반 사고 데이터를 우선, 없으면 고령자 사고 데이터 사용
-        PedestrianAccidentHotspots primary = combined.generalAccident != null ?
+        PedestrianAccidentHotspotsEntity primary = combined.generalAccident != null ?
                 combined.generalAccident : null;
-        ElderlyPedestrianAccidentHotspots elderly = combined.elderlyAccident;
+        ElderlyPedestrianAccidentHotspotsEntity elderly = combined.elderlyAccident;
 
         // ID 생성 (일반 사고 데이터 우선)
         String id;
@@ -213,7 +212,7 @@ public class EmdDetailAdapter implements EmdDetailPort {
         return sum;
     }
 
-    private AccidentDetail mapToAccidentDetail(PedestrianAccidentHotspots hotspot) {
+    private AccidentDetail mapToAccidentDetail(PedestrianAccidentHotspotsEntity hotspot) {
         // ID 생성 (점 코드 또는 FID 활용)
         String id = hotspot.getAccidentHotspotFid().toString();
 

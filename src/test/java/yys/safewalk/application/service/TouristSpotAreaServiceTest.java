@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
 import yys.safewalk.domain.model.Coordinate;
-import yys.safewalk.entity.PopularTouristSpots;
+import yys.safewalk.entity.PopularTouristSpotsEntity;
 import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 
 import java.math.BigDecimal;
@@ -34,7 +34,7 @@ class TouristSpotAreaServiceTest {
         Coordinate swCoordinate = new Coordinate(BigDecimal.valueOf(35.8242), BigDecimal.valueOf(129.2070));
         Coordinate neCoordinate = new Coordinate(BigDecimal.valueOf(35.8442), BigDecimal.valueOf(129.2270));
 
-        PopularTouristSpots spot = PopularTouristSpots.builder()
+        PopularTouristSpotsEntity spot = PopularTouristSpotsEntity.builder()
                 .spotName("동궁과월지")
                 .sidoName("경상북도")
                 .sigunguName("경주시")
