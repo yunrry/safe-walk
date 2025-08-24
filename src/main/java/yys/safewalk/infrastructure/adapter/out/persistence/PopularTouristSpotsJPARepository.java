@@ -31,6 +31,14 @@ public interface PopularTouristSpotsJPARepository extends JpaRepository<PopularT
      */
     List<PopularTouristSpots> findBySigunguNameIsNull();
 
-
-    List<PopularTouristSpots> findBySidoCodeAndMode(String sidoCode, String mode);
+    /**
+     * 시도코드와 모드로 관광지 조회 (rank 순으로 정렬)
+     */
+    @Query("SELECT p FROM PopularTouristSpots p " +
+            "WHERE p.sidoCode = :sidoCode AND p.mode = :mode " +
+            "ORDER BY p.rank ASC")
+    List<PopularTouristSpots> findBySidoCodeAndMode(
+            @Param("sidoCode") String sidoCode, 
+            @Param("mode") String mode
+    );
 }

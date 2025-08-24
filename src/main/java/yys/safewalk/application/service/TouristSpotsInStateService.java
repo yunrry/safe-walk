@@ -27,6 +27,7 @@ public class TouristSpotsInStateService {
                         spot.getTouristSpotId(),
                         spot.getSidoCode(),
                         spot.getMode(),
+                        spot.getRank(),
                         spot.getSidoName(),
                         spot.getSigunguName(),
                         spot.getSpotName(),
