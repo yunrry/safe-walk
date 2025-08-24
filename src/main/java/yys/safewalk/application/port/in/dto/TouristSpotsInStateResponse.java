@@ -13,6 +13,8 @@ public record TouristSpotsInStateResponse(
         String sidoCode,
         @JsonProperty("mode")
         String mode,
+        @JsonProperty("rank")
+        Integer rank,
         @JsonProperty("sido_name")
         String sidoName,
         @JsonProperty("sigungu_name")
