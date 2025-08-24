@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import yys.safewalk.entity.PopularTouristSpots;
-import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsRepository;
+import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.NaverLocalSearchApiClient;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TouristSpotSigunguUpdateNaverService {
 
-    private final PopularTouristSpotsRepository repository;
+    private final PopularTouristSpotsJPARepository popularTouristSpotsJPARepository;
     private final NaverLocalSearchApiClient naverApiClient;
     
     // 병렬 처리를 위한 스레드 풀
@@ -27,7 +27,7 @@ public class TouristSpotSigunguUpdateNaverService {
 
     @Transactional
     public void updateAllSigunguNames() {
-        List<PopularTouristSpots> spotsWithoutSigungu = repository.findBySigunguNameIsNull();
+        List<PopularTouristSpots> spotsWithoutSigungu = popularTouristSpotsJPARepository.findBySigunguNameIsNull();
 
         log.info("네이버 API로 시군구명이 없는 관광지 {}개 발견", spotsWithoutSigungu.size());
 
@@ -115,7 +115,7 @@ public class TouristSpotSigunguUpdateNaverService {
                             String extractedSigungu = extractSigunguFromAddress(item.address());
                             if (extractedSigungu != null) {
                                 spot.setSigunguName(extractedSigungu);
-                                repository.save(spot);
+                                popularTouristSpotsJPARepository.save(spot);
                                 
                                 log.info("시군구명 업데이트 성공: {} -> {} (주소: {})", 
                                         spot.getSpotName(), extractedSigungu, item.address());
@@ -151,7 +151,7 @@ public class TouristSpotSigunguUpdateNaverService {
                             String extractedSigungu = extractSigunguFromAddress(item.address());
                             if (extractedSigungu != null) {
                                 spot.setSigunguName(extractedSigungu);
-                                repository.save(spot);
+                                popularTouristSpotsJPARepository.save(spot);
                                 
                                 log.info("대체 검색으로 시군구명 업데이트 성공: {} -> {} (주소: {})", 
                                         spot.getSpotName(), extractedSigungu, item.address());
@@ -270,7 +270,7 @@ public class TouristSpotSigunguUpdateNaverService {
      */
     @Transactional
     public void updateSigunguNameById(Long id) {
-        PopularTouristSpots spot = repository.findById(id)
+        PopularTouristSpots spot = popularTouristSpotsJPARepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID " + id + "에 해당하는 관광지를 찾을 수 없습니다."));
         
         log.info("ID {} 관광지 시군구명 업데이트 시작 (네이버 API): {}", id, spot.getSpotName());

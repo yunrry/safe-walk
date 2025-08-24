@@ -67,6 +67,15 @@ public class PopularTouristSpots {
     @Column(name = "latitude", precision = 12, scale = 9)
     private BigDecimal latitude;
 
+    @Column(name = "sido_code", length = 10)
+    private String sidoCode;
+
+    @Column(name = "mode", length = 50)
+    private String mode;
+
+    @Column(name = "rank")
+    private Integer rank;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
