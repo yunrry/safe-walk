@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yys.safewalk.entity.PopularTouristSpots;
+import yys.safewalk.entity.PopularTouristSpotsEntity;
 import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.NaverLocalSearchApiClient;
 
@@ -27,7 +27,7 @@ public class TouristSpotSigunguUpdateNaverService {
 
     @Transactional
     public void updateAllSigunguNames() {
-        List<PopularTouristSpots> spotsWithoutSigungu = popularTouristSpotsJPARepository.findBySigunguNameIsNull();
+        List<PopularTouristSpotsEntity> spotsWithoutSigungu = popularTouristSpotsJPARepository.findBySigunguNameIsNull();
 
         log.info("네이버 API로 시군구명이 없는 관광지 {}개 발견", spotsWithoutSigungu.size());
 
@@ -42,7 +42,7 @@ public class TouristSpotSigunguUpdateNaverService {
         for (int i = 0; i < totalBatches; i++) {
             int startIndex = i * batchSize;
             int endIndex = Math.min(startIndex + batchSize, spotsWithoutSigungu.size());
-            List<PopularTouristSpots> batch = spotsWithoutSigungu.subList(startIndex, endIndex);
+            List<PopularTouristSpotsEntity> batch = spotsWithoutSigungu.subList(startIndex, endIndex);
             
             log.info("배치 {}/{} 처리 중... ({}-{})", i + 1, totalBatches, startIndex + 1, endIndex);
             
@@ -80,7 +80,7 @@ public class TouristSpotSigunguUpdateNaverService {
     }
 
     @Transactional
-    public void updateSigunguName(PopularTouristSpots spot) {
+    public void updateSigunguName(PopularTouristSpotsEntity spot) {
         if (spot.getSigunguName() != null) {
             log.debug("이미 시군구명이 설정되어 있음: {}", spot.getSpotName());
             return;
@@ -131,7 +131,7 @@ public class TouristSpotSigunguUpdateNaverService {
                 );
     }
 
-    private void tryAlternativeSearch(PopularTouristSpots spot) {
+    private void tryAlternativeSearch(PopularTouristSpotsEntity spot) {
         String alternativeQuery = spot.getSpotName();
         log.info("대체 검색 시도: {} -> 검색어: {}", spot.getSpotName(), alternativeQuery);
 
@@ -164,7 +164,7 @@ public class TouristSpotSigunguUpdateNaverService {
                 );
     }
 
-    private String buildSearchQuery(PopularTouristSpots spot) {
+    private String buildSearchQuery(PopularTouristSpotsEntity spot) {
         StringBuilder query = new StringBuilder();
 
         if (spot.getSidoName() != null) {
@@ -270,7 +270,7 @@ public class TouristSpotSigunguUpdateNaverService {
      */
     @Transactional
     public void updateSigunguNameById(Long id) {
-        PopularTouristSpots spot = popularTouristSpotsJPARepository.findById(id)
+        PopularTouristSpotsEntity spot = popularTouristSpotsJPARepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID " + id + "에 해당하는 관광지를 찾을 수 없습니다."));
         
         log.info("ID {} 관광지 시군구명 업데이트 시작 (네이버 API): {}", id, spot.getSpotName());

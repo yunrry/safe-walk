@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yys.safewalk.entity.PopularTouristSpots;
+import yys.safewalk.entity.PopularTouristSpotsEntity;
 import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.KakaoMapApiClient;
 
@@ -25,7 +25,7 @@ public class TouristSpotCoordinateService {
 
     @Transactional
     public void updateAllCoordinates() {
-        List<PopularTouristSpots> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
+        List<PopularTouristSpotsEntity> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
 
         log.info("좌표가 없는 관광지 {}개 발견", spotsWithoutCoordinates.size());
 
@@ -40,7 +40,7 @@ public class TouristSpotCoordinateService {
         for (int i = 0; i < totalBatches; i++) {
             int startIndex = i * batchSize;
             int endIndex = Math.min(startIndex + batchSize, spotsWithoutCoordinates.size());
-            List<PopularTouristSpots> batch = spotsWithoutCoordinates.subList(startIndex, endIndex);
+            List<PopularTouristSpotsEntity> batch = spotsWithoutCoordinates.subList(startIndex, endIndex);
             
             log.info("배치 {}/{} 처리 중... ({}-{})", i + 1, totalBatches, startIndex + 1, endIndex);
             
@@ -77,7 +77,7 @@ public class TouristSpotCoordinateService {
     }
 
     @Transactional
-    public void updateCoordinate(PopularTouristSpots spot) {
+    public void updateCoordinate(PopularTouristSpotsEntity spot) {
         String searchQuery = buildSearchQuery(spot);
 
         try {
@@ -123,7 +123,7 @@ public class TouristSpotCoordinateService {
         }
     }
 
-    private void tryAlternativeSearch(PopularTouristSpots spot) {
+    private void tryAlternativeSearch(PopularTouristSpotsEntity spot) {
         String alternativeQuery = spot.getSpotName();
         
         try {
@@ -158,7 +158,7 @@ public class TouristSpotCoordinateService {
         }
     }
 
-    private String buildSearchQuery(PopularTouristSpots spot) {
+    private String buildSearchQuery(PopularTouristSpotsEntity spot) {
         // "경상북도 경주시 불국사" 형태로 검색어 구성
         StringBuilder query = new StringBuilder();
 

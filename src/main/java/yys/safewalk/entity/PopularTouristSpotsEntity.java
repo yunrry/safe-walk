@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import yys.safewalk.domain.model.PopularTouristSpots;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PopularTouristSpots {
+public class PopularTouristSpotsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -83,4 +84,28 @@ public class PopularTouristSpots {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+
+    public PopularTouristSpots toDomain() {
+        return PopularTouristSpots.builder()
+                .id(this.id)
+                .sidoName(this.sidoName)
+                .sigunguName(this.sigunguName)
+                .spotName(this.spotName)
+                .touristSpotId(this.touristSpotId)
+                .category(this.category)
+                .ageGroup(this.ageGroup)
+                .ratio(this.ratio)
+                .baseYearMonth(this.baseYearMonth)
+                .growthRate(this.growthRate)
+                .sourceFile(this.sourceFile)
+                .longitude(this.longitude)
+                .latitude(this.latitude)
+                .sidoCode(this.sidoCode)
+                .mode(this.mode)
+                .rank(this.rank)
+                .createdAt(this.createdAt)
+                .updatedAt(this.updatedAt)
+                .build();
+    }
 }

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import yys.safewalk.entity.PopularTouristSpots;
+import yys.safewalk.entity.PopularTouristSpotsEntity;
 import yys.safewalk.infrastructure.adapter.out.persistence.PopularTouristSpotsJPARepository;
 import yys.safewalk.infrastructure.external.NaverLocalSearchApiClient;
 
@@ -30,7 +30,7 @@ public class TouristSpotCoordinateNaverService {
 
     @Transactional
     public void updateAllCoordinates() {
-        List<PopularTouristSpots> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
+        List<PopularTouristSpotsEntity> spotsWithoutCoordinates = popularTouristSpotsJPARepository.findByLongitudeIsNullOrLatitudeIsNull();
 
         log.info("네이버 API로 좌표가 없는 관광지 {}개 발견", spotsWithoutCoordinates.size());
 
@@ -45,7 +45,7 @@ public class TouristSpotCoordinateNaverService {
         for (int i = 0; i < totalBatches; i++) {
             int startIndex = i * batchSize;
             int endIndex = Math.min(startIndex + batchSize, spotsWithoutCoordinates.size());
-            List<PopularTouristSpots> batch = spotsWithoutCoordinates.subList(startIndex, endIndex);
+            List<PopularTouristSpotsEntity> batch = spotsWithoutCoordinates.subList(startIndex, endIndex);
             
             log.info("배치 {}/{} 처리 중... ({}-{})", i + 1, totalBatches, startIndex + 1, endIndex);
             
@@ -83,7 +83,7 @@ public class TouristSpotCoordinateNaverService {
     }
 
     @Transactional
-    public void updateCoordinate(PopularTouristSpots spot) {
+    public void updateCoordinate(PopularTouristSpotsEntity spot) {
         String searchQuery = buildSearchQuery(spot);
 
         // 개별 API 호출 전 딜레이 추가 (네이버 API 제한 고려)
@@ -154,7 +154,7 @@ public class TouristSpotCoordinateNaverService {
         }
     }
 
-    private void tryAlternativeSearch(PopularTouristSpots spot) {
+    private void tryAlternativeSearch(PopularTouristSpotsEntity spot) {
         String alternativeQuery = spot.getSpotName();
         
         try {
@@ -206,7 +206,7 @@ public class TouristSpotCoordinateNaverService {
         }
     }
 
-    private String buildSearchQuery(PopularTouristSpots spot) {
+    private String buildSearchQuery(PopularTouristSpotsEntity spot) {
         // "경상북도 경주시 불국사" 형태로 검색어 구성
         StringBuilder query = new StringBuilder();
 
@@ -351,7 +351,7 @@ public class TouristSpotCoordinateNaverService {
      */
     @Transactional
     public void updateCoordinateById(Long id) {
-        PopularTouristSpots spot = popularTouristSpotsJPARepository.findById(id)
+        PopularTouristSpotsEntity spot = popularTouristSpotsJPARepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ID " + id + "에 해당하는 관광지를 찾을 수 없습니다."));
         
         log.info("ID {} 관광지 좌표 업데이트 시작 (네이버 API): {}", id, spot.getSpotName());
