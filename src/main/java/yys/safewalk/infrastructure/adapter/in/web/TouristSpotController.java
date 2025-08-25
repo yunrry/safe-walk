@@ -12,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import yys.safewalk.application.port.in.GetTouristSpotAccidentsQuery;
+import yys.safewalk.application.port.in.dto.EmdResponse;
 import yys.safewalk.application.port.in.dto.TouristSpotResponse;
+import yys.safewalk.application.port.in.dto.TouristSpotSearchResponse;
 import yys.safewalk.application.port.in.dto.TouristSpotsInStateResponse;
 import yys.safewalk.application.service.TouristSpotAreaService;
+import yys.safewalk.application.service.TouristSpotSearchService;
 import yys.safewalk.application.service.TouristSpotsInStateService;
 import yys.safewalk.domain.model.Coordinate;
 import yys.safewalk.domain.model.TouristSpotAccidentResponse;
@@ -32,6 +35,7 @@ public class TouristSpotController {
     private final TouristSpotAreaService touristSpotAreaService;
     private final TouristSpotsInStateService touristSpotsInStateService;
     private final GetTouristSpotAccidentsQuery getTouristSpotAccidentsQuery;
+    private final TouristSpotSearchService touristSpotSearchService;
 
     @GetMapping("/tourist-spots")
     @Operation(
@@ -145,4 +149,41 @@ public class TouristSpotController {
         }
     }
 
+
+    @GetMapping("/tourist-spots/search/realtime")
+    @Operation(
+            summary = "관광지 실시간 검색",
+            description = "자동완성을 위한 실시간 관광지 검색을 제공합니다.",
+            parameters = {
+                    @Parameter(name = "query", description = "검색할 관광지명", example = "불국"),
+                    @Parameter(name = "limit", description = "반환할 최대 결과 수", example = "10")
+            }
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "실시간 검색 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = EmdResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "잘못된 요청 (검색어 유효성 검증 실패)",
+                    content = @Content(mediaType = "application/json")
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "서버 내부 오류",
+                    content = @Content(mediaType = "application/json")
+            )
+    })
+    public ResponseEntity<List<TouristSpotSearchResponse>> searchRealtime(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "10") int limit
+    ) {
+        List<TouristSpotSearchResponse> response = touristSpotSearchService.searchRealtime(query, limit);
+        return ResponseEntity.ok(response);
+    }
 }
