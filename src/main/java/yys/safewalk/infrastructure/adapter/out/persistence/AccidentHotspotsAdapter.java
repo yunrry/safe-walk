@@ -10,6 +10,7 @@ import yys.safewalk.entity.ElderlyPedestrianAccidentHotspotsEntity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,7 +52,7 @@ public class AccidentHotspotsAdapter implements LoadAccidentHotspotsPort {
 
         // 3. 사고 데이터가 없는 경우에도 기본 정보 포함하여 반환
         if (pedestrianAccidents.isEmpty() && elderlyAccidents.isEmpty()) {
-            return null;                           // accidents = null
+            return Collections.emptyList();                           // accidents = null
         }
 
         // 4. 사고 데이터가 있는 경우 기존 로직 수행
