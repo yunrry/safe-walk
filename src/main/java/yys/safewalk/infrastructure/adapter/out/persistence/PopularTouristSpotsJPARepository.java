@@ -1,9 +1,12 @@
 package yys.safewalk.infrastructure.adapter.out.persistence;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import yys.safewalk.domain.model.PopularTouristSpots;
+import yys.safewalk.entity.AdministrativeLegalDongs;
 import yys.safewalk.entity.PopularTouristSpotsEntity;
 import java.util.Optional;
 import java.util.List;
@@ -45,4 +48,7 @@ public interface PopularTouristSpotsJPARepository extends JpaRepository<PopularT
     Optional<PopularTouristSpotsEntity> findByTouristSpotId(String touristSpotId);
 
     List<PopularTouristSpotsEntity> findAllByTouristSpotId(String touristSpotId);
+
+    @Query("SELECT a FROM PopularTouristSpotsEntity a WHERE a.spotName LIKE :query% ORDER BY a.spotName")
+    List<PopularTouristSpotsEntity> findBySpotNameStartingWith(String query, PageRequest of);
 }
